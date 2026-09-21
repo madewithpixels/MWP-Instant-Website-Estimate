@@ -1,0 +1,104 @@
+/* MWP Estimate — functional CSS.
+ * Stage/result visibility is engine-driven (inline display), so every stage
+ * and the result panel stay visible in the Webflow Designer canvas.
+ * Visual styling lives on Webflow classes (IWA *, MWP *); this file only
+ * covers states and elements the Style panel can't express.
+ */
+.mwp-option:before {
+  background-color: var(--raspberry);
+}
+#mwp-adv * {
+  box-sizing: border-box;
+}
+#mwp-adv [data-mwp='track'] {
+  display: block;
+  height: 10px;
+  border-radius: 99px;
+  overflow: hidden;
+  transform: translateZ(0);
+}
+#mwp-adv [data-fill] {
+  display: block;
+  height: 100%;
+  width: 0;
+  border-radius: 99px;
+  transition:
+    width 0.22s cubic-bezier(0.22, 0.61, 0.36, 1),
+    opacity 0.22s ease;
+}
+#mwp-adv [data-fill='website'] { background: var(--teal); }
+#mwp-adv [data-fill='brand'] { background: var(--raspberry); }
+#mwp-adv [data-fill='content'] { background: var(--coral); }
+#mwp-adv [data-fill='assets'] { background: color-mix(in hsl, var(--raspberry) 30%, var(--teal) 70%); }
+#mwp-adv [data-fill='func'] { background: color-mix(in hsl, var(--raspberry) 50%, var(--coral) 50%); }
+
+#mwp-adv [data-mwp='result-type'] { color: #fff; }
+#mwp-adv [data-mwp='result-type'][data-type='standard'] { background: var(--teal); }
+#mwp-adv [data-mwp='result-type'][data-type='brand-led'] { background: var(--raspberry); }
+#mwp-adv [data-mwp='result-type'][data-type='content-led'] { background: var(--coral); }
+#mwp-adv [data-mwp='result-type'][data-type='asset-led'] { background: color-mix(in hsl, var(--raspberry) 30%, var(--teal) 70%); }
+#mwp-adv [data-mwp='result-type'][data-type='complex'] { background: color-mix(in hsl, var(--raspberry) 50%, var(--coral) 50%); }
+
+#mwp-adv [data-fill].is-preview {
+  opacity: 0.55;
+  background-image: color-mix(in hsl, currentcolor 90%, var(--darkgrey) 10%);
+}
+
+#mwp-adv [data-dot] {
+  display: inline-block;
+  width: 9px;
+  height: 9px;
+  border-radius: 3px;
+}
+#mwp-adv [data-dot='website'] { background: var(--teal); }
+#mwp-adv [data-dot='brand'] { background: var(--raspberry); }
+#mwp-adv [data-dot='content'] { background: var(--coral); }
+#mwp-adv [data-dot='assets'] { background: color-mix(in hsl, var(--raspberry) 30%, var(--teal) 70%); }
+#mwp-adv [data-dot='func'] { background: color-mix(in hsl, var(--raspberry) 50%, var(--coral) 50%); }
+
+#mwp-adv [data-answer-id] { cursor: pointer; }
+#mwp-adv [data-answer-id]:focus-visible {
+  outline: 3px solid var(--teal);
+  outline-offset: 2px;
+}
+
+/* Progress step base styling lives on the "mwp-pstep" class in Webflow.
+   Only the JS-toggled states remain here. */
+#mwp-adv [data-mwp='pstep'].is-done { background: color-mix(in hsl, var(--raspberry) 90%, var(--darkgrey) 10%); }
+#mwp-adv [data-mwp='pstep'].is-current {
+  background: var(--raspberry);
+  opacity: 0.5;
+}
+
+#mwp-adv [data-choice]:empty::before {
+  content: 'Not answered yet';
+  opacity: 0.5;
+}
+#mwp-adv [data-f] { display: none; }
+#mwp-adv [data-mwp='send'][hidden] { display: none; }
+
+/* Star rating */
+#mwp-adv [data-mwp='rating'] { margin-top: 2px; }
+#mwp-adv [data-mwp='rate-label'] {
+  font-size: 0.9rem;
+  font-weight: 600;
+  margin-bottom: 4px;
+}
+#mwp-adv [data-mwp='stars'] {
+  display: flex;
+  gap: 4px;
+}
+#mwp-adv [data-rate] {
+  font-size: 1.5rem;
+  line-height: 1;
+  color: #d0d5da;
+  cursor: pointer;
+  text-decoration: none;
+  transition: color 0.15s ease;
+}
+#mwp-adv [data-rate].is-on { color: #f5b301; }
+#mwp-adv input[data-mwp='rating-value'] { display: none; }
+
+@media (prefers-reduced-motion: reduce) {
+  #mwp-adv [data-fill] { transition: none; }
+}

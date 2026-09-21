@@ -1,0 +1,142 @@
+/*! MWP Instant Website Estimate v1.0.0 | madewithpixels.co.uk | github.com/madewithpixels/MWP-Instant-Website-Estimate */
+/* MWP Estimate — functional CSS.
+ * Stage/result visibility is engine-driven (inline display), so every stage
+ * and the result panel stay visible in the Webflow Designer canvas.
+ * Visual styling lives on Webflow classes (IWA *, MWP *); this file only
+ * covers states and elements the Style panel can't express.
+ */
+.mwp-option:before {
+  background-color: var(--raspberry);
+}
+#mwp-adv * {
+  box-sizing: border-box;
+}
+#mwp-adv [data-mwp='track'] {
+  display: block;
+  height: 10px;
+  border-radius: 99px;
+  overflow: hidden;
+  transform: translateZ(0);
+}
+#mwp-adv [data-fill] {
+  display: block;
+  height: 100%;
+  width: 0;
+  border-radius: 99px;
+  transition:
+    width 0.22s cubic-bezier(0.22, 0.61, 0.36, 1),
+    opacity 0.22s ease;
+}
+#mwp-adv [data-fill='website'] { background: var(--teal); }
+#mwp-adv [data-fill='brand'] { background: var(--raspberry); }
+#mwp-adv [data-fill='content'] { background: var(--coral); }
+#mwp-adv [data-fill='assets'] { background: color-mix(in hsl, var(--raspberry) 30%, var(--teal) 70%); }
+#mwp-adv [data-fill='func'] { background: color-mix(in hsl, var(--raspberry) 50%, var(--coral) 50%); }
+
+#mwp-adv [data-mwp='result-type'] { color: #fff; }
+#mwp-adv [data-mwp='result-type'][data-type='standard'] { background: var(--teal); }
+#mwp-adv [data-mwp='result-type'][data-type='brand-led'] { background: var(--raspberry); }
+#mwp-adv [data-mwp='result-type'][data-type='content-led'] { background: var(--coral); }
+#mwp-adv [data-mwp='result-type'][data-type='asset-led'] { background: color-mix(in hsl, var(--raspberry) 30%, var(--teal) 70%); }
+#mwp-adv [data-mwp='result-type'][data-type='complex'] { background: color-mix(in hsl, var(--raspberry) 50%, var(--coral) 50%); }
+
+#mwp-adv [data-fill].is-preview {
+  opacity: 0.55;
+  background-image: color-mix(in hsl, currentcolor 90%, var(--darkgrey) 10%);
+}
+
+#mwp-adv [data-dot] {
+  display: inline-block;
+  width: 9px;
+  height: 9px;
+  border-radius: 3px;
+}
+#mwp-adv [data-dot='website'] { background: var(--teal); }
+#mwp-adv [data-dot='brand'] { background: var(--raspberry); }
+#mwp-adv [data-dot='content'] { background: var(--coral); }
+#mwp-adv [data-dot='assets'] { background: color-mix(in hsl, var(--raspberry) 30%, var(--teal) 70%); }
+#mwp-adv [data-dot='func'] { background: color-mix(in hsl, var(--raspberry) 50%, var(--coral) 50%); }
+
+#mwp-adv [data-answer-id] { cursor: pointer; }
+#mwp-adv [data-answer-id]:focus-visible {
+  outline: 3px solid var(--teal);
+  outline-offset: 2px;
+}
+
+/* Progress step base styling lives on the "mwp-pstep" class in Webflow.
+   Only the JS-toggled states remain here. */
+#mwp-adv [data-mwp='pstep'].is-done { background: color-mix(in hsl, var(--raspberry) 90%, var(--darkgrey) 10%); }
+#mwp-adv [data-mwp='pstep'].is-current {
+  background: var(--raspberry);
+  opacity: 0.5;
+}
+
+#mwp-adv [data-choice]:empty::before {
+  content: 'Not answered yet';
+  opacity: 0.5;
+}
+#mwp-adv [data-f] { display: none; }
+#mwp-adv [data-mwp='send'][hidden] { display: none; }
+
+/* Star rating */
+#mwp-adv [data-mwp='rating'] { margin-top: 2px; }
+#mwp-adv [data-mwp='rate-label'] {
+  font-size: 0.9rem;
+  font-weight: 600;
+  margin-bottom: 4px;
+}
+#mwp-adv [data-mwp='stars'] {
+  display: flex;
+  gap: 4px;
+}
+#mwp-adv [data-rate] {
+  font-size: 1.5rem;
+  line-height: 1;
+  color: #d0d5da;
+  cursor: pointer;
+  text-decoration: none;
+  transition: color 0.15s ease;
+}
+#mwp-adv [data-rate].is-on { color: #f5b301; }
+#mwp-adv input[data-mwp='rating-value'] { display: none; }
+
+@media (prefers-reduced-motion: reduce) {
+  #mwp-adv [data-fill] { transition: none; }
+}
+
+/* MWP Estimate — mobile estimate dock (below 768px).
+ *
+ * Everything the Style panel can express lives on Webflow CLASSES and is
+ * editable at the Mobile breakpoint:
+ *   - dock shell geometry ....... "MWP Graph Col" (combo on "IWA Panel")
+ *   - total row / tap target .... "IWA Est"
+ *   - tiles strip ............... "mwp-dock-tiles" (currently display:none at Mobile)
+ *   - individual tile ........... "mwp-dock-tile"
+ *   - tile price text ........... "mwp-dock-val"
+ *   - Breakdown toggle .......... "mwp-dock-toggle"
+ *   - toggle chevron ............ "mwp-dock-chev"
+ *   - Back / Next row ........... "IWA Nav" (no translate at Mobile)
+ *   - heading + sub hidden ...... "MWP Graph Heading" / "MWP Graph Sub"
+ *
+ * Only the rules below live here, because they depend on the .is-open and
+ * .mwp-result-active classes dock.js toggles — Webflow has no UI for
+ * parent-state selectors.
+ */
+@media screen and (max-width: 767px) {
+  /* Scrolls if expanded content exceeds the max-height set on the class */
+  #mwp-adv [data-mwp='graph-col'] { overflow-y: auto; }
+
+  /* Clearance so the question panel (and Back / Next) ends above the collapsed dock */
+  #mwp-adv [data-mwp='q-col'] { margin-bottom: 110px; }
+
+  /* Collapsed by default — bars hidden */
+  #mwp-adv [data-mwp='bars'] { display: none; }
+
+  /* Expanded — bars return, tiles stay hidden */
+  #mwp-adv [data-mwp='graph-col'].is-open [data-mwp='bars'] { display: block; }
+  #mwp-adv [data-mwp='graph-col'].is-open [data-mwp='dock-tiles'] { display: none; }
+
+  /* Hidden on the assessment screen — the result panel already shows the breakdown */
+  #mwp-adv.mwp-result-active [data-mwp='graph-col'] { display: none; }
+  #mwp-adv.mwp-result-active [data-mwp='q-col'] { margin-bottom: 0; }
+}

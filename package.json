@@ -1,0 +1,17 @@
+{
+  "name": "mwp-instant-website-estimate",
+  "version": "1.0.0",
+  "private": true,
+  "description": "MadewithPixels instant website estimate (Q&A assessment) for Webflow — served via jsDelivr.",
+  "license": "UNLICENSED",
+  "type": "module",
+  "scripts": {
+    "build": "node build.mjs",
+    "check": "node build.mjs --check",
+    "test": "npm run build && node test/smoke.mjs dist/mwp-estimate.js && node test/smoke.mjs dist/mwp-estimate.min.js"
+  },
+  "devDependencies": {
+    "esbuild": "^0.25.0",
+    "jsdom": "^24.1.3"
+  }
+}

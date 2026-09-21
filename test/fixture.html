@@ -1,0 +1,66 @@
+<!-- Minimal copy of the Webflow markup contract, used by test/smoke.mjs.
+     Option prices mirror the live /estimate page (2026-09-21). -->
+<section id="mwp-adv">
+  <div data-mwp="stage-label"></div>
+  <div data-mwp="progress"><div data-mwp="pstep"></div><div data-mwp="pstep"></div><div data-mwp="pstep"></div><div data-mwp="pstep"></div><div data-mwp="pstep"></div><div data-mwp="pstep"></div></div>
+  <div data-mwp="q-col">
+    <div data-stage="project_type" data-select="single">
+      <a data-answer-id="new-site" data-label="A brand new website" data-result-tags="new-site"></a>
+      <a data-answer-id="redesign" data-label="A redesign of an existing website" data-result-tags="redesign"></a>
+      <a data-answer-id="unsure" data-label="I’m not sure yet" data-result-tags="unsure"></a>
+    </div>
+    <div data-stage="website_size" data-select="single" data-cat="website">
+      <a data-answer-id="single" data-label="Single page website" data-base-min="1000" data-base-max="2000"></a>
+      <a data-answer-id="small" data-label="Small website" data-base-min="2500" data-base-max="3500"></a>
+      <a data-answer-id="medium" data-label="Medium website" data-base-min="3500" data-base-max="5500"></a>
+      <a data-answer-id="large" data-label="Larger website" data-base-min="5500" data-base-max="8000"></a>
+      <a data-answer-id="notsure" data-label="Not sure" data-base-min="2500" data-base-max="5000"></a>
+    </div>
+    <div data-stage="brand_state" data-select="single" data-cat="brand">
+      <a data-answer-id="established" data-label="We already have a professional brand identity" data-brand-min="0" data-brand-max="0"></a>
+      <a data-answer-id="logo-only" data-label="We only have a logo" data-brand-min="300" data-brand-max="500"></a>
+      <a data-answer-id="brand-help" data-label="We’d like help developing our brand" data-brand-min="500" data-brand-max="900" data-result-tags="brand-development"></a>
+    </div>
+    <div data-stage="content_state" data-select="single" data-cat="content">
+      <a data-answer-id="everything" data-label="Everything is written"></a>
+      <a data-answer-id="some" data-label="Some content exists"></a>
+    </div>
+    <div data-stage="visual_assets" data-select="single" data-cat="assets">
+      <a data-answer-id="pro" data-label="Professional photography and imagery" data-asset-min="0" data-asset-max="0"></a>
+      <a data-answer-id="phone" data-label="Mostly phone photos" data-asset-min="300" data-asset-max="700"></a>
+    </div>
+    <div data-stage="features" data-select="multi" data-cat="func">
+      <a data-answer-id="blog" data-label="Blog / advice section" data-cms-count="1"></a>
+      <a data-answer-id="ecom" data-label="Ecommerce" data-feature-min="1000" data-feature-max="2500" data-result-tags="ecommerce"></a>
+      <a data-answer-id="ai" data-label="AI functionality" data-complexity="consultation" data-result-tags="consultation"></a>
+    </div>
+    <div data-mwp="nav"><a data-mwp="back"></a><a data-mwp="next"></a></div>
+    <div data-mwp="result" data-active="false">
+      <span data-mwp="result-type"></span><p data-mwp="result-sub"></p><p data-mwp="shaping"></p>
+      <div data-mwp="drivers"></div>
+      <div data-mwp="invest"><div data-mwp="big-est"></div>
+        <div data-mwp="tips"><p data-mwp="tips-h">Keeping costs towards the lower end</p><div data-mwp="tips-list"></div></div>
+      </div>
+      <div data-mwp="recos"></div>
+      <a data-mwp="cta-book" href="#"></a>
+      <form data-mwp="book" hidden><input data-mwp="book-first"></form>
+      <form data-mwp="send" hidden>
+        <input data-f="project_type"><input data-f="brand_state"><input data-f="website_size"><input data-f="content_state">
+        <input data-f="visual_assets"><input data-f="features"><input data-f="estimate_min"><input data-f="estimate_max">
+        <input data-f="result_type"><input data-f="complexity_tags"><input data-f="recommendation">
+      </form>
+    </div>
+  </div>
+  <div data-mwp="graph-col">
+    <div data-mwp="bars">
+      <span data-fill="website"></span><span data-val="website"></span>
+      <span data-fill="brand"></span><span data-val="brand"></span>
+      <span data-fill="content"></span><span data-val="content"></span>
+      <span data-fill="assets"></span><span data-val="assets"></span>
+      <span data-fill="func"></span><span data-val="func"></span>
+    </div>
+    <div data-mwp="dock-tiles"><span data-short="website"></span><span data-short="func"></span></div>
+    <div data-mwp="est"><div data-mwp="preview-flag" hidden></div><div data-mwp="est-figure"></div><div data-mwp="est-note"></div>
+      <div data-mwp="dock-toggle"><span data-mwp="dock-hint"></span><span data-mwp="dock-chev"></span></div></div>
+  </div>
+</section>
