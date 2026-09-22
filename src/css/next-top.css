@@ -1,0 +1,12 @@
+/* MWP Estimate — extra Next buttons beside each question.
+ * Layout is on the Webflow class "IWA Question Row". These rules cover the
+ * aria-disabled state (set by next-top.js) and keep the button from wrapping. */
+#mwp-adv [data-mwp='next-top'] {
+  flex-shrink: 0;
+  white-space: nowrap;
+}
+#mwp-adv [data-mwp='next-top'][aria-disabled='true'],
+#mwp-adv [data-mwp='next'][aria-disabled='true'] {
+  opacity: 0.45;
+  cursor: not-allowed;
+}

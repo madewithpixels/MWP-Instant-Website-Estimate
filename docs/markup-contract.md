@@ -28,10 +28,12 @@ Webflow class names (`IWA Panel`, `IWA Option`, `mwp-dock-tiles` and so on) are 
 | Attribute | Purpose |
 | --- | --- |
 | `data-mwp="nav"` | Back/Next row. Hidden on the result screen. |
-| `data-mwp="back"`, `data-mwp="next"` | Buttons. Next's label becomes "See my assessment" on the last stage. |
+| `data-mwp="back"`, `data-mwp="next"` | Buttons. Next's label becomes "See my assessment" on the last stage. Next gets `aria-disabled="true"` while the active single-choice stage is unanswered. |
+| `data-mwp="q-row"` → `data-mwp="q"` + `data-mwp="next-top"` | Heading row in each stage (class `IWA Question Row`): the question plus an extra Next button lined up with the right edge of the options. `next-top` clicks the main Next and gets the same `aria-disabled` state. Its label is static in Webflow ("See my assessment" on the features stage). |
 | `data-mwp="progress"` | Gets `aria-valuenow`. |
 | `data-mwp="pstep"` | One per stage. Gets `.is-done` / `.is-current`. |
-| `data-mwp="stage-label"` | Text is set to "Step n of 6 — …". |
+| `data-mwp="stage-label"` | Text is set to "Step n of 6 — …". Shows `startLabel` ("Get started") until the visitor starts. |
+| `data-mwp="progress-wrap"` | Wrapper around the stage label and progress. Before starting it's the fixed "Get started" button (its Webflow class, `IWA Progress Wrapper`, positions it). Starting adds `.mwp-started` to `#mwp-adv`, which puts it back in the flow at the top of the widget and scrolls the widget into view. |
 
 ## Live graph (graph column / mobile dock)
 
@@ -45,6 +47,7 @@ Webflow class names (`IWA Panel`, `IWA Option`, `mwp-dock-tiles` and so on) are 
 | `data-mwp="est"` | Total row. Tapping it toggles the dock on mobile. |
 | `data-mwp="est-figure"` | Running estimate (£0 → £500 → range). |
 | `data-mwp="est-note"` | Bespoke-functionality note. |
+| `data-mwp="est-caveat"` | Static line under the running figure ("Final price depends on scope and design revisions."). Edit the copy in Webflow. Hidden in the collapsed mobile dock and shown when it's expanded. |
 | `data-mwp="preview-flag"` | Shown while previewing on hover or focus. |
 | `data-mwp="dock-hint"`, `data-mwp="dock-chev"` | "Breakdown" / "Less detail" text and chevron. |
 | `data-mwp="dock-tiles"`, `data-short="<cat>"` | Compact tiles. Hidden at Mobile since 1.0.0 but still kept up to date. |
@@ -57,8 +60,9 @@ Webflow class names (`IWA Panel`, `IWA Option`, `mwp-dock-tiles` and so on) are 
 | `data-mwp="result"` | Result panel. `data-active="true"` while showing. |
 | `data-mwp="result-type"` | Badge. Also gets `data-type="standard\|content-led\|brand-led\|asset-led\|complex"` for colour. |
 | `data-mwp="result-sub"`, `data-mwp="shaping"` | Result copy. |
-| `data-mwp="drivers"` | Filled with `.mwp-driver` rows (one per category with a price). |
+| `data-mwp="drivers"` | *Optional.* Filled with `.mwp-driver` rows (one per category with a price, using `driverCopy`). Removed from the page on 22 Sep 2026 because it repeated the summary box. The engine skips it when it's missing, so adding the element back brings it back. |
 | `data-mwp="big-est"` | Final range (+ "bespoke functionality to be scoped"). |
+| `data-mwp="big-est-caveat"` | Static line under the final range. Edit the copy in Webflow. The scripts don't touch it. |
 | `data-mwp="tips"` → `data-mwp="tips-list"` | Lower-end tips. `tips.js` fills the list with `<p class="iwa-fine-print" data-mwp="tip">`. The whole block is hidden when no tip applies. |
 | `data-mwp="recos"` | Filled with `.mwp-reco.is-<key>` boxes (`h4.mwp-reco-h`, `p.mwp-reco-p`). |
 | `data-mwp="cta-book"` | `href` set from `links.bookingUrl`. Clicking it toggles `data-mwp="book"`. |
@@ -77,4 +81,4 @@ Hidden `<input data-f="…">` fields inside the forms carry the assessment into 
 
 ## Classes the scripts add
 
-`.is-selected`, `.is-done`, `.is-current`, `.is-preview`, `.is-open`, `.mwp-result-active` (on `#mwp-adv`), `.mwp-driver`, `.mwp-driver-h`, `.mwp-driver-p`, `.mwp-reco`, `.mwp-reco-h`, `.mwp-reco-p`, `.iwa-fine-print` (tips). Style the generated ones in Webflow by creating classes with those exact names.
+`.mwp-started` (on `#mwp-adv`), `.is-selected`, `.is-done`, `.is-current`, `.is-preview`, `.is-open`, `.mwp-result-active` (on `#mwp-adv`), `.mwp-driver`, `.mwp-driver-h`, `.mwp-driver-p`, `.mwp-reco`, `.mwp-reco-h`, `.mwp-reco-p`, `.iwa-fine-print` (tips). Style the generated ones in Webflow by creating classes with those exact names.

@@ -7,27 +7,28 @@ Prices come from two places:
 - **Option attributes in Webflow** for website size, brand, visual assets and individual features. To change these, edit the attribute on the option in the Designer. No release needed.
 - **`MWP_PREFS`** for the content matrix, CMS bands and the stage 1 start figure. See [configuration.md](configuration.md).
 
-Values below are as of 21 Sep 2026.
+Values below are as of 22 Sep 2026. When both ends of a range are equal it's shown as a single figure, e.g. £1,000.
 
 ## Running figure before a size is chosen
 
 | State | Figure shown |
 | --- | --- |
 | No answers | **£0** |
-| Any stage 1 (`project_type`) answer | **£500** (`startFigure`) |
+| Any stage 1 (`project_type`) answer | **£500** (`startFigure`), shown on the Website bar with the stage 1 answer as its label |
 | Website size chosen | Real computed range. The £500 is **not** added on top. |
+| Website size "Not sure" | **£1,000**: the £500 from stage 1 plus another £500. |
 
-Stage 1 doesn't add to the price. It only moves the running figure off zero.
+Stage 1 doesn't add to the price. It moves the running figure off zero and gives the breakdown something to show straight away. Choosing a size replaces the £500 on the Website bar.
 
 ## Website: `data-base-min` / `data-base-max` on `website_size` options
 
 | Option id | Label | Range |
 | --- | --- | --- |
-| `single` | Single page website | £1,000–£2,000 |
-| `small` | Small website | £2,500–£3,500 |
-| `medium` | Medium website | £3,500–£5,500 |
-| `large` | Larger website | £5,500–£8,000 |
-| `notsure` | Not sure | £2,500–£5,000 |
+| `single` | Single page website | £500–£850 (shows as £500–£1,000 after rounding) |
+| `small` | Small website | £850–£1,500 (shows as £750–£1,500 after rounding) |
+| `medium` | Medium website | £1,500–£3,000 |
+| `large` | Larger website | £3,000–£5,000 |
+| `notsure` | Not sure | £1,000 (`data-base-min` = `data-base-max` = 1000) |
 
 ## Brand: `data-brand-min` / `data-brand-max` on `brand_state` options
 
@@ -106,12 +107,12 @@ New site, small website, logo only, some content, phone photos, blog:
 
 | Category | Range |
 | --- | --- |
-| Website (small) | £2,500–£3,500 |
+| Website (small) | £850–£1,500 |
 | Brand (logo-only) | £300–£500 |
 | Content (small × some) | £400–£650 |
 | Assets (phone) | £300–£700 |
 | Functionality (1 CMS) | £0–£250 |
-| **Raw total** | £3,500–£5,600 |
-| **Shown** | **£3,500–£6,000**, `content-led` |
+| **Raw total** | £1,850–£3,600 |
+| **Shown** | **£1,750–£4,000**, `content-led` |
 
 The smoke test checks this example.

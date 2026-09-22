@@ -1,20 +1,22 @@
 <!-- Minimal copy of the Webflow markup contract, used by test/smoke.mjs.
-     Option prices mirror the live /estimate page (2026-09-21). -->
+     Option prices mirror the live /estimate page (2026-09-22). -->
 <section id="mwp-adv">
-  <div data-mwp="stage-label"></div>
-  <div data-mwp="progress"><div data-mwp="pstep"></div><div data-mwp="pstep"></div><div data-mwp="pstep"></div><div data-mwp="pstep"></div><div data-mwp="pstep"></div><div data-mwp="pstep"></div></div>
+  <div data-mwp="progress-wrap"><div data-mwp="stage-label"></div>
+  <div data-mwp="progress"><div data-mwp="pstep"></div><div data-mwp="pstep"></div><div data-mwp="pstep"></div><div data-mwp="pstep"></div><div data-mwp="pstep"></div><div data-mwp="pstep"></div></div></div>
   <div data-mwp="q-col">
     <div data-stage="project_type" data-select="single">
+      <div data-mwp="q-row"><h2 data-mwp="q">What are you looking for?</h2><a href="#" data-mwp="next-top">Next</a></div>
       <a data-answer-id="new-site" data-label="A brand new website" data-result-tags="new-site"></a>
       <a data-answer-id="redesign" data-label="A redesign of an existing website" data-result-tags="redesign"></a>
       <a data-answer-id="unsure" data-label="I’m not sure yet" data-result-tags="unsure"></a>
     </div>
     <div data-stage="website_size" data-select="single" data-cat="website">
-      <a data-answer-id="single" data-label="Single page website" data-base-min="1000" data-base-max="2000"></a>
-      <a data-answer-id="small" data-label="Small website" data-base-min="2500" data-base-max="3500"></a>
-      <a data-answer-id="medium" data-label="Medium website" data-base-min="3500" data-base-max="5500"></a>
-      <a data-answer-id="large" data-label="Larger website" data-base-min="5500" data-base-max="8000"></a>
-      <a data-answer-id="notsure" data-label="Not sure" data-base-min="2500" data-base-max="5000"></a>
+      <div data-mwp="q-row"><h2 data-mwp="q">How large?</h2><a href="#" data-mwp="next-top">Next</a></div>
+      <a data-answer-id="single" data-label="Single page website" data-base-min="500" data-base-max="850"></a>
+      <a data-answer-id="small" data-label="Small website" data-base-min="850" data-base-max="1500"></a>
+      <a data-answer-id="medium" data-label="Medium website" data-base-min="1500" data-base-max="3000"></a>
+      <a data-answer-id="large" data-label="Larger website" data-base-min="3000" data-base-max="5000"></a>
+      <a data-answer-id="notsure" data-label="Not sure" data-base-min="1000" data-base-max="1000"></a>
     </div>
     <div data-stage="brand_state" data-select="single" data-cat="brand">
       <a data-answer-id="established" data-label="We already have a professional brand identity" data-brand-min="0" data-brand-max="0"></a>
@@ -37,7 +39,6 @@
     <div data-mwp="nav"><a data-mwp="back"></a><a data-mwp="next"></a></div>
     <div data-mwp="result" data-active="false">
       <span data-mwp="result-type"></span><p data-mwp="result-sub"></p><p data-mwp="shaping"></p>
-      <div data-mwp="drivers"></div>
       <div data-mwp="invest"><div data-mwp="big-est"></div>
         <div data-mwp="tips"><p data-mwp="tips-h">Keeping costs towards the lower end</p><div data-mwp="tips-list"></div></div>
       </div>
@@ -60,7 +61,7 @@
       <span data-fill="func"></span><span data-val="func"></span>
     </div>
     <div data-mwp="dock-tiles"><span data-short="website"></span><span data-short="func"></span></div>
-    <div data-mwp="est"><div data-mwp="preview-flag" hidden></div><div data-mwp="est-figure"></div><div data-mwp="est-note"></div>
+    <div data-mwp="est"><div data-mwp="preview-flag" hidden></div><div data-mwp="est-figure"></div><p data-mwp="est-caveat">Final price depends on scope and design revisions.</p><div data-mwp="est-note"></div>
       <div data-mwp="dock-toggle"><span data-mwp="dock-hint"></span><span data-mwp="dock-chev"></span></div></div>
   </div>
 </section>

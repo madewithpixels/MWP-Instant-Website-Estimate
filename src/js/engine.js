@@ -77,14 +77,18 @@
   var money = function (n) {
     return P.currency.symbol + Math.round(n).toLocaleString(P.currency.locale);
   };
+  /* "£a–£b", or a single figure when both ends match (e.g. "Not sure" website size) */
+  var range = function (a, b) {
+    return Math.round(a) === Math.round(b) ? money(a) : money(a) + '–' + money(b);
+  };
   var roundMin = function (n) {
     return Math.floor(n / P.rounding.minDownTo) * P.rounding.minDownTo;
   };
   var roundMax = function (n) {
     return Math.ceil(n / P.rounding.maxUpTo) * P.rounding.maxUpTo;
   };
-  /* Running figure starts at £0; any stage-1 answer shows P.startFigure (default £500)
-     until stage 2 prices the build. Totals from stage 2 on are unaffected. */
+  /* Running figure starts at £0; any stage-1 answer puts P.startFigure (default £500)
+     on the Website bar until stage 2 prices the build. Totals from stage 2 on are unaffected. */
   var START = P.startFigure != null ? P.startFigure : 500;
   function compute(s) {
     var cat = { website: [0, 0], brand: [0, 0], content: [0, 0], assets: [0, 0], func: [0, 0] },
@@ -93,6 +97,8 @@
     if (s.website_size) {
       var b = optData('website_size', s.website_size).data;
       cat.website = [b.baseMin || 0, b.baseMax || 0];
+    } else if (s.project_type) {
+      cat.website = [START, START];
     }
     if (s.brand_state) {
       var br = optData('brand_state', s.brand_state);
@@ -182,7 +188,7 @@
         fill.style.width = pct + '%';
         fill.classList.toggle('is-preview', !!pv);
       }
-      if (val) val.textContent = r.cat[c.key][1] ? money(r.cat[c.key][0]) + '–' + money(r.cat[c.key][1]) : '—';
+      if (val) val.textContent = r.cat[c.key][1] ? range(r.cat[c.key][0], r.cat[c.key][1]) : '—';
     });
     var pf = $('[data-mwp="preview-flag"]');
     if (pf) pf.hidden = !pv;
@@ -193,7 +199,7 @@
       if (note) note.textContent = '';
       return;
     }
-    if (fig) fig.textContent = money(r.roundedMin) + '–' + money(r.roundedMax);
+    if (fig) fig.textContent = range(r.roundedMin, r.roundedMax);
     if (note) note.textContent = r.consult ? P.bespokeNote : '';
   }
   var CAT_STAGE = { website: 'website_size', brand: 'brand_state', content: 'content_state', assets: 'visual_assets' };
@@ -210,7 +216,10 @@
           .join(', ');
       } else {
         var id = s[CAT_STAGE[c.key]];
-        el.textContent = id ? optData(CAT_STAGE[c.key], id).label || '' : '';
+        var txt = id ? optData(CAT_STAGE[c.key], id).label || '' : '';
+        /* Before a size is chosen, the Website row shows the stage-1 answer */
+        if (!txt && c.key === 'website' && s.project_type) txt = optData('project_type', s.project_type).label || '';
+        el.textContent = txt;
       }
     });
   }
@@ -404,7 +413,7 @@
     if (_rt) _rt.setAttribute('data-type', type);
     T('[data-mwp="result-sub"]', P.resultTypes[type].sub);
     T('[data-mwp="shaping"]', shapingText(r));
-    T('[data-mwp="big-est"]', r.consult ? money(r.roundedMin) + '–' + money(r.roundedMax) + ' + bespoke functionality to be scoped' : money(r.roundedMin) + '–' + money(r.roundedMax));
+    T('[data-mwp="big-est"]', range(r.roundedMin, r.roundedMax) + (r.consult ? ' + bespoke functionality to be scoped' : ''));
     committed = r;
     paint(r, false);
     updateChoices(sel);
@@ -418,7 +427,7 @@
         var div = document.createElement('div');
         div.setAttribute('data-mwp', 'driver');
         div.className = 'mwp-driver';
-        div.innerHTML = '<strong class="mwp-driver-h"><span data-dot="' + c.key + '"></span> ' + c.label + ' — ' + money(r.cat[c.key][0]) + '–' + money(r.cat[c.key][1]) + '</strong><div class="mwp-driver-p">' + P.driverCopy[c.key] + '</div>';
+        div.innerHTML = '<strong class="mwp-driver-h"><span data-dot="' + c.key + '"></span> ' + c.label + ' — ' + range(r.cat[c.key][0], r.cat[c.key][1]) + '</strong><div class="mwp-driver-p">' + P.driverCopy[c.key] + '</div>';
         dEl.appendChild(div);
       });
     }

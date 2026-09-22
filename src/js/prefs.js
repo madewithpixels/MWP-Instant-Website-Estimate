@@ -16,6 +16,10 @@
     rounding: { minDownTo: 250, maxUpTo: 500 },
     /* Running figure shown once a stage-1 answer is picked, before stage 2 prices the build. */
     startFigure: 500,
+    /* Text on the fixed progress bar before the visitor starts (start.js). */
+    startLabel: 'Get started',
+    /* Screens where Next scrolls the progress bar to the top (next-top.js). */
+    scrollOnNext: '(max-width: 991px), (max-height: 800px)',
     graphScale: null /* null = auto per-category ceiling; or {website:8000,brand:900,content:1800,assets:1200,func:3750} */,
     currency: { symbol: '£', locale: 'en-GB' },
     links: { bookingUrl: '#REPLACE_WITH_BOOKING_URL', sendAssessmentMode: 'form' },

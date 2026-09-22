@@ -9,8 +9,8 @@ const CHECK = process.argv.includes('--check');
 
 // Order matters: prefs must exist before the engine reads them. The other
 // modules only need the markup and MutationObserver, so they follow.
-const JS = ['prefs', 'engine', 'book-reveal', 'rating', 'tips', 'dock'];
-const CSS = ['assessment', 'dock'];
+const JS = ['prefs', 'engine', 'book-reveal', 'rating', 'tips', 'dock', 'start', 'next-top'];
+const CSS = ['assessment', 'dock', 'start', 'next-top'];
 
 const banner = `/*! MWP Instant Website Estimate v${pkg.version} | madewithpixels.co.uk | github.com/madewithpixels/MWP-Instant-Website-Estimate */`;
 

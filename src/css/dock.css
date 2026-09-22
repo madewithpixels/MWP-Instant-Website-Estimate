@@ -23,11 +23,17 @@
   /* Clearance so the question panel (and Back / Next) ends above the collapsed dock */
   #mwp-adv [data-mwp='q-col'] { margin-bottom: 110px; }
 
-  /* Collapsed by default — bars hidden */
+  /* Collapsed by default — bars and the scope caveat hidden to keep the dock shallow */
   #mwp-adv [data-mwp='bars'] { display: none; }
+  #mwp-adv [data-mwp='est-caveat'] { display: none; }
 
-  /* Expanded — bars return, tiles stay hidden */
+  /* Collapsed — no dotted divider above the total (IWA Est border-top); it only
+     separates the bars from the total when the dock is expanded */
+  #mwp-adv [data-mwp='graph-col']:not(.is-open) [data-mwp='est'] { border-top-style: none; }
+
+  /* Expanded — bars and caveat return, tiles stay hidden */
   #mwp-adv [data-mwp='graph-col'].is-open [data-mwp='bars'] { display: block; }
+  #mwp-adv [data-mwp='graph-col'].is-open [data-mwp='est-caveat'] { display: block; }
   #mwp-adv [data-mwp='graph-col'].is-open [data-mwp='dock-tiles'] { display: none; }
 
   /* Hidden on the assessment screen — the result panel already shows the breakdown */

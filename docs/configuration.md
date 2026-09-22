@@ -26,6 +26,8 @@ Use page overrides for quick tweaks and testing. When a change should stick, upd
 | `behaviour.respectReducedMotion` | `true` | Reserved. Reduced motion is handled in CSS. |
 | `rounding.minDownTo` / `maxUpTo` | `250` / `500` | Rounding for the total range. |
 | `startFigure` | `500` | Figure shown after a stage 1 answer, before a size is chosen. |
+| `startLabel` | `'Get started'` | Text on the fixed progress bar before the visitor starts. |
+| `scrollOnNext` | `'(max-width: 991px), (max-height: 800px)'` | Media query. When it matches (tablet, mobile, short screens), moving to the next stage scrolls the progress bar to the top of the viewport, below the navbar. Set `'none'` to turn it off. |
 | `graphScale` | `null` | `null` = each bar's 100% is that category's highest possible max. Or pass `{ website: 8000, … }`. |
 | `currency.symbol` / `locale` | `'£'` / `'en-GB'` | Money formatting. |
 | `links.bookingUrl` | `'#REPLACE_WITH_BOOKING_URL'` | Set as the `href` of `cta-book`. **Still a placeholder:** set it before launch. |
@@ -35,7 +37,7 @@ Use page overrides for quick tweaks and testing. When a change should stick, upd
 | `cmsBands` | see [pricing](pricing-model.md) | CMS collection count → range. |
 | `resultTypePriority` | `complex, brand-led, content-led, asset-led, standard` | Order in which result types are tested. |
 | `resultTypes.<type>.badge` / `.sub` | copy | Badge text and sub-line on the result screen. |
-| `driverCopy.<cat>` | copy | One line per category in "What's driving your estimate". |
+| `driverCopy.<cat>` | copy | One line per category in the optional `drivers` list on the result screen. Unused while that element isn't on the page. |
 | `recommendations.<key>.h` / `.p` | copy | Recommendation boxes (`brand`, `content`, `assets`, `complex`). |
 | `bespokeNote` | copy | Note shown under the running figure when a consultation feature is selected. |
 | `stageLabels` | 7 labels | "Step n of 6 — label", plus the result label. |

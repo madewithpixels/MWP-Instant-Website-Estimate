@@ -1,0 +1,64 @@
+/* MWP Estimate — "Get started" launcher states.
+ *
+ * The fixed-at-bottom look lives on the Webflow class "IWA Progress Wrapper".
+ * These rules depend on .mwp-started, which start.js adds to #mwp-adv, so
+ * they can't be expressed in the Style panel.
+ */
+
+/* Room for the floating navbar when "Get started" scrolls the widget into view */
+#mwp-adv { scroll-margin-top: 6rem; }
+
+/* Colour/border fade between the two states (start.js animates position and pips) */
+#mwp-adv [data-mwp='progress-wrap'] {
+  transition: background-color 0.5s ease, border-color 0.5s ease, color 0.5s ease;
+}
+
+/* Before starting: the wrapper is a solid raspberry "Get started" button.
+   Progress pips hidden; label centred, larger and bolder. */
+#mwp-adv:not(.mwp-started) [data-mwp='progress'] { display: none; }
+#mwp-adv:not(.mwp-started) [data-mwp='progress-wrap'] {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding-top: 1.25rem;
+  padding-bottom: 1.25rem;
+  background-color: var(--raspberry);
+  border-color: var(--raspberry);
+  color: #fff;
+  cursor: pointer;
+  transition: background-color 0.2s ease, border-color 0.2s ease, transform 0.2s ease;
+}
+#mwp-adv:not(.mwp-started) [data-mwp='progress-wrap'] [data-mwp='stage-label'] {
+  font-size: 1.25rem;
+  font-weight: 700;
+  letter-spacing: 0.01em;
+}
+#mwp-adv:not(.mwp-started) [data-mwp='progress-wrap'] [data-mwp='stage-label']::after {
+  content: '  →';
+  white-space: pre;
+}
+#mwp-adv:not(.mwp-started) [data-mwp='progress-wrap']:hover {
+  background-color: color-mix(in srgb, var(--raspberry) 85%, #000);
+  border-color: color-mix(in srgb, var(--raspberry) 85%, #000);
+  transform: translateY(-2px);
+}
+#mwp-adv:not(.mwp-started) [data-mwp='progress-wrap']:focus-visible {
+  outline: 3px solid #fff;
+  outline-offset: 3px;
+}
+@media (prefers-reduced-motion: reduce) {
+  #mwp-adv:not(.mwp-started) [data-mwp='progress-wrap']:hover { transform: none; }
+}
+
+/* After starting: back into the flow at the top of the widget */
+#mwp-adv.mwp-started [data-mwp='progress-wrap'] {
+  position: relative;
+  left: auto;
+  right: auto;
+  bottom: auto;
+}
+
+/* Mobile: keep the estimate dock out of the way until the visitor starts */
+@media screen and (max-width: 767px) {
+  #mwp-adv:not(.mwp-started) [data-mwp='graph-col'] { display: none; }
+}

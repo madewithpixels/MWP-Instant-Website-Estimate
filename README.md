@@ -19,7 +19,7 @@ Put this in **Page settings → Custom code → Before `</body>`**:
 
 The page needs a `<section id="mwp-adv">` built to the [markup contract](docs/markup-contract.md). To override settings such as the booking URL or the start figure without a new release, see [configuration](docs/configuration.md).
 
-When you move the live page over from its inline embeds, follow [docs/webflow-setup.md](docs/webflow-setup.md), because some embeds have to be removed at the same time.
+When you move the live page over from its inline embeds, follow [docs/webflow-setup.md](docs/webflow-setup.md), because the embeds have to be removed at the same time.
 
 ## Repo layout
 
@@ -31,9 +31,13 @@ src/js/
   rating.js        Star rating widgets.
   tips.js          "Keeping costs towards the lower end" tips on the result screen.
   dock.js          Mobile estimate dock (collapse/expand, compact tiles, hide on result).
+  start.js         "Get started" launcher: fixed progress bar that drops into place on start.
+  next-top.js      Extra Next button beside each question; disabled state for both Next buttons.
 src/css/
   assessment.css   Functional CSS: bar fills, badges, JS-toggled states, rating.
   dock.css         Mobile dock rules that depend on JS-toggled parent classes.
+  start.css        Launcher states (before/after .mwp-started).
+  next-top.css     Top Next button: no-wrap and disabled state.
 dist/              Built files served by jsDelivr (committed on purpose).
 test/              jsdom smoke test against a minimal copy of the markup.
 webflow/           Paste-ready snippets for Webflow custom code.

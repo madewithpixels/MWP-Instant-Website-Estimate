@@ -23,6 +23,10 @@
     rounding: { minDownTo: 250, maxUpTo: 500 },
     /* Running figure shown once a stage-1 answer is picked, before stage 2 prices the build. */
     startFigure: 500,
+    /* Text on the fixed progress bar before the visitor starts (start.js). */
+    startLabel: 'Get started',
+    /* Screens where Next scrolls the progress bar to the top (next-top.js). */
+    scrollOnNext: '(max-width: 991px), (max-height: 800px)',
     graphScale: null /* null = auto per-category ceiling; or {website:8000,brand:900,content:1800,assets:1200,func:3750} */,
     currency: { symbol: '£', locale: 'en-GB' },
     links: { bookingUrl: '#REPLACE_WITH_BOOKING_URL', sendAssessmentMode: 'form' },
@@ -154,14 +158,18 @@
   var money = function (n) {
     return P.currency.symbol + Math.round(n).toLocaleString(P.currency.locale);
   };
+  /* "£a–£b", or a single figure when both ends match (e.g. "Not sure" website size) */
+  var range = function (a, b) {
+    return Math.round(a) === Math.round(b) ? money(a) : money(a) + '–' + money(b);
+  };
   var roundMin = function (n) {
     return Math.floor(n / P.rounding.minDownTo) * P.rounding.minDownTo;
   };
   var roundMax = function (n) {
     return Math.ceil(n / P.rounding.maxUpTo) * P.rounding.maxUpTo;
   };
-  /* Running figure starts at £0; any stage-1 answer shows P.startFigure (default £500)
-     until stage 2 prices the build. Totals from stage 2 on are unaffected. */
+  /* Running figure starts at £0; any stage-1 answer puts P.startFigure (default £500)
+     on the Website bar until stage 2 prices the build. Totals from stage 2 on are unaffected. */
   var START = P.startFigure != null ? P.startFigure : 500;
   function compute(s) {
     var cat = { website: [0, 0], brand: [0, 0], content: [0, 0], assets: [0, 0], func: [0, 0] },
@@ -170,6 +178,8 @@
     if (s.website_size) {
       var b = optData('website_size', s.website_size).data;
       cat.website = [b.baseMin || 0, b.baseMax || 0];
+    } else if (s.project_type) {
+      cat.website = [START, START];
     }
     if (s.brand_state) {
       var br = optData('brand_state', s.brand_state);
@@ -259,7 +269,7 @@
         fill.style.width = pct + '%';
         fill.classList.toggle('is-preview', !!pv);
       }
-      if (val) val.textContent = r.cat[c.key][1] ? money(r.cat[c.key][0]) + '–' + money(r.cat[c.key][1]) : '—';
+      if (val) val.textContent = r.cat[c.key][1] ? range(r.cat[c.key][0], r.cat[c.key][1]) : '—';
     });
     var pf = $('[data-mwp="preview-flag"]');
     if (pf) pf.hidden = !pv;
@@ -270,7 +280,7 @@
       if (note) note.textContent = '';
       return;
     }
-    if (fig) fig.textContent = money(r.roundedMin) + '–' + money(r.roundedMax);
+    if (fig) fig.textContent = range(r.roundedMin, r.roundedMax);
     if (note) note.textContent = r.consult ? P.bespokeNote : '';
   }
   var CAT_STAGE = { website: 'website_size', brand: 'brand_state', content: 'content_state', assets: 'visual_assets' };
@@ -287,7 +297,10 @@
           .join(', ');
       } else {
         var id = s[CAT_STAGE[c.key]];
-        el.textContent = id ? optData(CAT_STAGE[c.key], id).label || '' : '';
+        var txt = id ? optData(CAT_STAGE[c.key], id).label || '' : '';
+        /* Before a size is chosen, the Website row shows the stage-1 answer */
+        if (!txt && c.key === 'website' && s.project_type) txt = optData('project_type', s.project_type).label || '';
+        el.textContent = txt;
       }
     });
   }
@@ -481,7 +494,7 @@
     if (_rt) _rt.setAttribute('data-type', type);
     T('[data-mwp="result-sub"]', P.resultTypes[type].sub);
     T('[data-mwp="shaping"]', shapingText(r));
-    T('[data-mwp="big-est"]', r.consult ? money(r.roundedMin) + '–' + money(r.roundedMax) + ' + bespoke functionality to be scoped' : money(r.roundedMin) + '–' + money(r.roundedMax));
+    T('[data-mwp="big-est"]', range(r.roundedMin, r.roundedMax) + (r.consult ? ' + bespoke functionality to be scoped' : ''));
     committed = r;
     paint(r, false);
     updateChoices(sel);
@@ -495,7 +508,7 @@
         var div = document.createElement('div');
         div.setAttribute('data-mwp', 'driver');
         div.className = 'mwp-driver';
-        div.innerHTML = '<strong class="mwp-driver-h"><span data-dot="' + c.key + '"></span> ' + c.label + ' — ' + money(r.cat[c.key][0]) + '–' + money(r.cat[c.key][1]) + '</strong><div class="mwp-driver-p">' + P.driverCopy[c.key] + '</div>';
+        div.innerHTML = '<strong class="mwp-driver-h"><span data-dot="' + c.key + '"></span> ' + c.label + ' — ' + range(r.cat[c.key][0], r.cat[c.key][1]) + '</strong><div class="mwp-driver-p">' + P.driverCopy[c.key] + '</div>';
         dEl.appendChild(div);
       });
     }
@@ -780,6 +793,286 @@
       new MutationObserver(flag).observe(res, { attributes: true, attributeFilter: ['data-active'] });
       flag();
     }
+  }
+})();
+
+/* ---- start.js ---- */
+/* MWP Assessment — "Get started" launcher.
+ * Before the visitor starts, the progress wrapper ([data-mwp="progress-wrap"])
+ * sits fixed at the bottom of the screen (its Webflow class does that) and acts
+ * as the "Get started" button. Starting adds .mwp-started to #mwp-adv, which
+ * drops the wrapper back into place at the top of the widget (see start.css),
+ * restores the step label and scrolls the widget into view (respecting
+ * scroll-margin-top, reduced motion and the site's Lenis smooth scrolling).
+ *
+ * It also starts without scrolling if the visitor scrolls down to the widget
+ * or clicks an answer, so the fixed bar never sits over the questions.
+ *
+ * The change is animated: when started by scrolling, the button glides from
+ * the bottom of the screen into its slot (FLIP) while its colour fades to the
+ * panel style, the label cross-fades and the progress pips grow in from the
+ * left one after another. A placeholder padding on #mwp-adv reserves the
+ * slot's height before starting, so nothing below jumps when it lands.
+ */
+(function () {
+  'use strict';
+  var root = document.getElementById('mwp-adv');
+  if (!root) return;
+  var wrap = root.querySelector('[data-mwp="progress-wrap"]');
+  if (!wrap) return;
+  var P = window.MWP_PREFS || {};
+  var LABEL = P.startLabel || 'Get started';
+  var label = wrap.querySelector('[data-mwp="stage-label"]');
+  var stepText = label ? label.textContent : '';
+  var started = false;
+  var io = null;
+
+  var reduceMotion = function () {
+    return !!(window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches);
+  };
+
+  /* Reserve the in-flow slot's height while the wrapper is fixed, so content
+     doesn't shift when it drops into place. */
+  function reserve() {
+    if (started) return;
+    root.style.paddingTop = '';
+    wrap.style.transition = 'none'; /* measuring must not kick off the colour fade */
+    root.classList.add('mwp-started');
+    var cs = getComputedStyle(wrap);
+    var h = wrap.offsetHeight + (parseFloat(cs.marginTop) || 0) + (parseFloat(cs.marginBottom) || 0);
+    root.classList.remove('mwp-started');
+    void wrap.offsetHeight;
+    wrap.style.transition = '';
+    root.style.paddingTop = h + 'px';
+  }
+  reserve();
+  window.addEventListener('resize', reserve);
+
+  /* Progress pips grow in from the left, one after another; label fades in */
+  function emerge() {
+    if (!wrap.animate || reduceMotion()) return;
+    var ease = 'cubic-bezier(.2,.8,.2,1)';
+    if (label) label.animate([{ opacity: 0 }, { opacity: 1 }], { duration: 400, easing: 'ease-out' });
+    [].forEach.call(wrap.querySelectorAll('[data-mwp="pstep"]'), function (p, i) {
+      p.animate([{ transform: 'scaleX(0)', transformOrigin: 'left center', opacity: 0 }, { transform: 'scaleX(1)', transformOrigin: 'left center', opacity: 1 }], { duration: 450, delay: 150 + i * 70, easing: ease, fill: 'backwards' });
+    });
+  }
+
+  wrap.setAttribute('role', 'button');
+  wrap.setAttribute('tabindex', '0');
+  wrap.setAttribute('aria-controls', 'mwp-adv');
+  if (label) label.textContent = LABEL;
+
+  function start(scroll) {
+    if (started) return;
+    started = true;
+    var first = wrap.getBoundingClientRect();
+    window.removeEventListener('resize', reserve);
+    root.style.paddingTop = '';
+    root.classList.add('mwp-started');
+    wrap.removeAttribute('role');
+    wrap.removeAttribute('tabindex');
+    if (label) label.textContent = stepText;
+    if (io) io.disconnect();
+    if (wrap.animate && !reduceMotion()) {
+      if (scroll) {
+        /* Page is about to scroll: rise gently into place */
+        wrap.animate([{ opacity: 0, transform: 'translateY(24px)' }, { opacity: 1, transform: 'none' }], { duration: 500, easing: 'cubic-bezier(.2,.8,.2,1)' });
+      } else {
+        /* FLIP: start where the fixed button was, glide into the slot */
+        var last = wrap.getBoundingClientRect();
+        var dx = first.left - last.left,
+          dy = first.top - last.top;
+        if (Math.abs(dx) + Math.abs(dy) > 1) {
+          wrap.animate([{ transform: 'translate(' + dx + 'px,' + dy + 'px)' }, { transform: 'none' }], { duration: 650, easing: 'cubic-bezier(.2,.8,.2,1)' });
+        }
+      }
+      emerge();
+    }
+    if (scroll) scrollToWidget();
+  }
+
+  /* Smooth scroll driven by instant steps. The site's Lenis instance swallows
+     native smooth scrolling (scrollIntoView / behavior:'smooth'), but it follows
+     instant scrolls. Honours scroll-margin-top on #mwp-adv and stops if the
+     visitor scrolls themselves. */
+  function jump(y) {
+    try {
+      window.scrollTo({ top: y, behavior: 'instant' });
+    } catch (e) {
+      window.scrollTo(0, y);
+    }
+  }
+  function scrollToWidget() {
+    var reduce = reduceMotion();
+    var off = parseFloat(getComputedStyle(root).scrollMarginTop) || 0;
+    var from = window.pageYOffset,
+      to = Math.max(0, from + root.getBoundingClientRect().top - off);
+    if (reduce || Math.abs(to - from) < 2) return jump(to);
+    var d = Math.min(1200, Math.max(500, Math.abs(to - from) * 0.6)),
+      t0 = null,
+      done = false;
+    function stop() {
+      done = true;
+      window.removeEventListener('wheel', stop);
+      window.removeEventListener('touchstart', stop);
+    }
+    window.addEventListener('wheel', stop, { passive: true });
+    window.addEventListener('touchstart', stop, { passive: true });
+    function step(t) {
+      if (done) return;
+      if (t0 === null) t0 = t;
+      var p = Math.min(1, (t - t0) / d),
+        e = p < 0.5 ? 4 * p * p * p : 1 - Math.pow(-2 * p + 2, 3) / 2;
+      jump(from + (to - from) * e);
+      if (p < 1) requestAnimationFrame(step);
+      else stop();
+    }
+    requestAnimationFrame(step);
+    /* Safety net if rAF is throttled (background tab) */
+    setTimeout(function () {
+      if (!done) {
+        stop();
+        jump(to);
+      }
+    }, d + 300);
+  }
+
+  wrap.addEventListener('click', function (e) {
+    if (started) return;
+    e.preventDefault();
+    start(true);
+  });
+  wrap.addEventListener('keydown', function (e) {
+    if (started) return;
+    if (e.key === 'Enter' || e.key === ' ') {
+      e.preventDefault();
+      start(true);
+    }
+  });
+
+  /* Keep the engine's step label while not started (engine rewrites it on stage change) */
+  if (label && window.MutationObserver) {
+    new MutationObserver(function () {
+      if (started) return;
+      if (label.textContent !== LABEL) {
+        stepText = label.textContent;
+        label.textContent = LABEL;
+      }
+    }).observe(label, { childList: true, characterData: true, subtree: true });
+  }
+
+  /* Visitor scrolled down to the widget themselves, or answered something */
+  var grid = root.querySelector('[data-mwp="grid"]') || root;
+  if (window.IntersectionObserver) {
+    io = new IntersectionObserver(
+      function (entries) {
+        if (entries[0].isIntersecting) start(false);
+      },
+      { rootMargin: '0px 0px -40% 0px' }
+    );
+    io.observe(grid);
+  }
+  root.addEventListener('click', function (e) {
+    if (!started && e.target.closest('[data-answer-id]')) start(false);
+  }, true);
+})();
+
+/* ---- next-top.js ---- */
+/* MWP Assessment — extra Next buttons beside each question.
+ * Every [data-mwp="next-top"] (one per stage, inside [data-mwp="q-row"]) acts
+ * as the main Next button. It clicks [data-mwp="next"], so the engine's rules
+ * still apply. Both kinds of Next button get aria-disabled="true" while the
+ * active single-choice stage has no answer. On tablet, mobile and short screens
+ * moving on scrolls the progress bar to the top of the viewport.
+ */
+(function () {
+  'use strict';
+  var root = document.getElementById('mwp-adv');
+  if (!root) return;
+  var main = root.querySelector('[data-mwp="next"]');
+  var tops = [].slice.call(root.querySelectorAll('[data-mwp="next-top"]'));
+  if (!main || !tops.length) return;
+
+  tops.forEach(function (b) {
+    b.setAttribute('role', 'button');
+    b.addEventListener('click', function (e) {
+      e.preventDefault();
+      if (b.getAttribute('aria-disabled') === 'true') return;
+      main.click();
+    });
+  });
+
+  function update() {
+    var st = root.querySelector('[data-stage][data-active="true"]');
+    var blocked = !!st && (st.getAttribute('data-select') || 'single') === 'single' && !st.querySelector('[data-answer-id].is-selected');
+    [main].concat(tops).forEach(function (b) {
+      b.setAttribute('aria-disabled', blocked ? 'true' : 'false');
+    });
+  }
+  update();
+  if (window.MutationObserver) {
+    new MutationObserver(update).observe(root, { subtree: true, attributes: true, attributeFilter: ['data-active', 'aria-pressed'] });
+  }
+
+  /* On tablet, mobile and short screens, moving to the next stage scrolls the
+     progress bar back to the top of the viewport (below the navbar, using
+     #mwp-adv's scroll-margin-top). Media query is MWP_PREFS.scrollOnNext. */
+  var P = window.MWP_PREFS || {};
+  var MQ = P.scrollOnNext || '(max-width: 991px), (max-height: 800px)';
+  var target = root.querySelector('[data-mwp="progress-wrap"]') || root;
+  var activeKey = function () {
+    var st = root.querySelector('[data-stage][data-active="true"]');
+    return st ? st.getAttribute('data-stage') : 'result';
+  };
+  var before = null;
+  main.addEventListener('click', function () { before = activeKey(); }, true);
+  main.addEventListener('click', function () {
+    var moved = before !== null && activeKey() !== before;
+    before = null;
+    if (!moved || !(window.matchMedia && window.matchMedia(MQ).matches)) return;
+    var off = parseFloat(getComputedStyle(root).scrollMarginTop) || 0;
+    var to = Math.max(0, window.pageYOffset + target.getBoundingClientRect().top - off);
+    if (Math.abs(to - window.pageYOffset) > 8) smoothTo(to);
+  });
+
+  /* Lenis-safe smooth scroll (instant steps; see start.js) */
+  function jump(y) {
+    try {
+      window.scrollTo({ top: y, behavior: 'instant' });
+    } catch (e) {
+      window.scrollTo(0, y);
+    }
+  }
+  function smoothTo(to) {
+    var from = window.pageYOffset;
+    if (window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches) return jump(to);
+    var d = Math.min(700, Math.max(350, Math.abs(to - from) * 0.5)),
+      t0 = null,
+      done = false;
+    function stop() {
+      done = true;
+      window.removeEventListener('wheel', stop);
+      window.removeEventListener('touchstart', stop);
+    }
+    window.addEventListener('wheel', stop, { passive: true });
+    window.addEventListener('touchstart', stop, { passive: true });
+    function step(t) {
+      if (done) return;
+      if (t0 === null) t0 = t;
+      var p = Math.min(1, (t - t0) / d),
+        e = p < 0.5 ? 4 * p * p * p : 1 - Math.pow(-2 * p + 2, 3) / 2;
+      jump(from + (to - from) * e);
+      if (p < 1) requestAnimationFrame(step);
+      else stop();
+    }
+    requestAnimationFrame(step);
+    setTimeout(function () {
+      if (!done) {
+        stop();
+        jump(to);
+      }
+    }, d + 300);
   }
 })();
 
