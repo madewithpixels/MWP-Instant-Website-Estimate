@@ -65,6 +65,8 @@
       complex: { h: 'Your bespoke functionality', p: 'Because your project includes more advanced functionality, the best next step is a short discovery call so we can understand the details before pricing that part properly.' },
     },
     bespokeNote: 'Your project includes bespoke functionality, so part of the estimate needs a short discovery conversation before it can be priced accurately.',
+    /* Progress label while the booking panel is showing. */
+    bookLabel: 'Book a consultation',
     stageLabels: ['Your project', 'Your website', 'Your brand', 'Your content', 'Your visual assets', 'Your features', 'Your assessment'],
     finalGraph: { heading: 'What’s driving your estimate', sub: 'Your estimate reflects the level of design, content, assets and functionality your project is likely to need.' },
   };

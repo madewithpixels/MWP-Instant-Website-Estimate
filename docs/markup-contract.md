@@ -27,9 +27,9 @@ Webflow class names (`IWA Panel`, `IWA Option`, `mwp-dock-tiles` and so on) are 
 
 | Attribute | Purpose |
 | --- | --- |
-| `data-mwp="nav"` | Back/Next row. Hidden on the result screen. |
-| `data-mwp="back"`, `data-mwp="next"` | Buttons. Next's label becomes "See my assessment" on the last stage. Next gets `aria-disabled="true"` while the active single-choice stage is unanswered. |
-| `data-mwp="q-row"` → `data-mwp="q"` + `data-mwp="next-top"` | Heading row in each stage (class `IWA Question Row`): the question plus an extra Next button lined up with the right edge of the options. `next-top` clicks the main Next and gets the same `aria-disabled` state. Its label is static in Webflow ("See my assessment" on the features stage). |
+| `data-mwp="nav"` | Back/Next row. Hidden on the result and booking screens. |
+| `data-mwp="back"`, `data-mwp="next"` | Buttons. Next is hidden on the last stage, where the summary box buttons take over. Next gets `aria-disabled="true"` while the active single-choice stage is unanswered. |
+| `data-mwp="q-row"` → `data-mwp="q"` + `data-mwp="next-top"` | Heading row in each stage (class `IWA Question Row`): the question plus an extra Next button lined up with the right edge of the options. `next-top` clicks the main Next and gets the same `aria-disabled` state. Any `next-top` in the last stage is hidden. |
 | `data-mwp="progress"` | Gets `aria-valuenow`. |
 | `data-mwp="pstep"` | One per stage. Gets `.is-done` / `.is-current`. |
 | `data-mwp="stage-label"` | Text is set to "Step n of 6 — …". Shows `startLabel` ("Get started") until the visitor starts. |
@@ -52,6 +52,9 @@ Webflow class names (`IWA Panel`, `IWA Option`, `mwp-dock-tiles` and so on) are 
 | `data-mwp="dock-hint"`, `data-mwp="dock-chev"` | "Breakdown" / "Less detail" text and chevron. |
 | `data-mwp="dock-tiles"`, `data-short="<cat>"` | Compact tiles. Hidden at Mobile since 1.0.0 but still kept up to date. |
 | `data-choice="<cat>"` | *Optional.* Shows the chosen answer label per category. |
+| `data-mwp="sum-cta"` | Button row at the bottom of the summary box (class `IWA Sum CTA`, sticky to the bottom of the screen on desktop). Hidden until the last stage. Holds `cta-book` and `cta-see`. |
+| `data-mwp="cta-book"` | "Book a consultation". Shows the booking panel in the left column. Shown on the last stage and the result screen. `href` set from `links.bookingUrl`. |
+| `data-mwp="cta-see"` | "See assessment". Shows the result panel in the left column. Shown on the last stage and the booking screen. |
 
 ## Result screen
 
@@ -65,11 +68,17 @@ Webflow class names (`IWA Panel`, `IWA Option`, `mwp-dock-tiles` and so on) are 
 | `data-mwp="big-est-caveat"` | Static line under the final range. Edit the copy in Webflow. The scripts don't touch it. |
 | `data-mwp="tips"` → `data-mwp="tips-list"` | Lower-end tips. `tips.js` fills the list with `<p class="iwa-fine-print" data-mwp="tip">`. The whole block is hidden when no tip applies. |
 | `data-mwp="recos"` | Filled with `.mwp-reco.is-<key>` boxes (`h4.mwp-reco-h`, `p.mwp-reco-p`). |
-| `data-mwp="cta-book"` | `href` set from `links.bookingUrl`. Clicking it toggles `data-mwp="book"`. |
-| `data-mwp="book"`, `data-mwp="book-first"` | Booking form (starts hidden) and the field focused when it opens. |
-| `data-mwp="cta-send"` | Toggles the send form `data-mwp="send"` and focuses `data-mwp="email"`. |
+| `data-mwp="cta-send"` | "Get this assessment by email". Toggles the send form `data-mwp="send"` and focuses `data-mwp="email"`. |
 | `data-mwp="send-go"`, `data-mwp="send-ok"`, `data-f="email"` | *Optional* custom send flow. It isn't on the page as of Sep 2026, where the send form submits natively through Webflow. |
 | `data-mwp="rating"` → `data-rate="1..5"` + `input[data-mwp="rating-value"]` | Star rating. Any number of rating blocks is supported. |
+
+## Booking screen
+
+| Attribute | Purpose |
+| --- | --- |
+| `data-mwp="book-panel"` | Booking panel in the left column (classes `IWA Panel` + `MWP Result Panel`). `data-active="true"` and shown while booking. |
+| `data-mwp="book-tel"`, `data-mwp="book-email"` | Phone and email links. Plain Webflow links, no script. |
+| `data-mwp="book"`, `data-mwp="book-first"` | Booking form (always visible inside the panel) and the field focused when the panel opens (not on touch screens). |
 
 ## Hidden form fields
 
@@ -81,4 +90,4 @@ Hidden `<input data-f="…">` fields inside the forms carry the assessment into 
 
 ## Classes the scripts add
 
-`.mwp-started` (on `#mwp-adv`), `.is-selected`, `.is-done`, `.is-current`, `.is-preview`, `.is-open`, `.mwp-result-active` (on `#mwp-adv`), `.mwp-driver`, `.mwp-driver-h`, `.mwp-driver-p`, `.mwp-reco`, `.mwp-reco-h`, `.mwp-reco-p`, `.iwa-fine-print` (tips). Style the generated ones in Webflow by creating classes with those exact names.
+`.mwp-started`, `.mwp-cta-active`, `.mwp-result-active`, `.mwp-book-active` (all on `#mwp-adv`), `.is-selected`, `.is-done`, `.is-current`, `.is-preview`, `.is-open`, `.mwp-driver`, `.mwp-driver-h`, `.mwp-driver-p`, `.mwp-reco`, `.mwp-reco-h`, `.mwp-reco-p`, `.iwa-fine-print` (tips). Style the generated ones in Webflow by creating classes with those exact names.

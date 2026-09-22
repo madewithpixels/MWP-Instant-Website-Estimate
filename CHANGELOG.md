@@ -2,6 +2,18 @@
 
 ## Unreleased
 
+### Changed — end of the journey (markup contract change)
+- **Step 6 moves on from the summary box.** On the last stage the Next buttons are hidden (Back stays) and the summary box shows **Book a consultation** and **See assessment** (`data-mwp="sum-cta"`, class `IWA Sum CTA`). On desktop the row is sticky to the bottom of the screen, so the buttons stay visible even when the summary box is taller than the window. On mobile they sit side by side in the dock under the total.
+- **See assessment** shows the result panel in the left column; the summary box then keeps only Book. **Book a consultation** shows the new booking panel (`data-mwp="book-panel"`) in the left column; the summary box then offers See assessment. Both screens share one computed result, so switching is instant.
+- **Result screen** ends with **Get this assessment by email** (`cta-send`, relabelled). The Book button moved out of the result panel into the summary box.
+- **Booking panel**: heading, intro, phone and email links (`book-tel`, `book-email`), the "No pressure" note, then the existing booking form, now always visible inside the panel. Name is focused when it opens, except on touch screens.
+- **Mobile dock** stays on the result and booking screens, shrunk to the one remaining button (it used to disappear on the result screen). The engine now sets `.mwp-cta-active`, `.mwp-result-active` and `.mwp-book-active` on `#mwp-adv`; `dock.js` no longer watches the result panel.
+- Switching screens scrolls the left column into view on tablet, mobile and short screens, or whenever it's off screen (`next-top.js`, `mwp:view` event from the engine).
+- New prefs key `bookLabel` ('Book a consultation') for the progress label on the booking screen.
+
+### Removed
+- `book-reveal.js` and its embed. The engine now handles the booking view.
+
 ### Added
 - **Next beside each question** (`next-top.js`, `next-top.css`): each stage's heading sits in a `data-mwp="q-row"` row with a second Next button on the right, lined up with the options. It clicks the main Next, so the engine's rules still apply. Both Next buttons now get `aria-disabled="true"` (dimmed, `not-allowed` cursor) until a single-choice stage is answered.
 - **Scroll to the progress bar on Next** (`next-top.js`): on tablet, mobile and short screens (`scrollOnNext`, default `(max-width: 991px), (max-height: 800px)`), moving to the next stage or the result smooth-scrolls the progress bar to the top, below the navbar. It uses the same Lenis-safe scroll as the launcher and stops if the visitor scrolls.
@@ -13,6 +25,7 @@
 - **Single-figure ranges**: when both ends match, the engine shows one figure ("£1,000", not "£1,000–£1,000") in the running estimate, bars, drivers and final estimate.
 
 ### Webflow-side changes shipped alongside
+- 22 Sep (journey change): new `IWA Sum CTA` class (flex, 12px gaps, sticky bottom with the panel background; static from Tablet down, no top padding and no wrap at Mobile Landscape). `sum-cta` row added to the summary box, holding the moved `cta-book` ("Book a consultation") and a new `cta-see` (`IWA Btn` + `IWA Btn Ghost`). New `book-panel` after the result panel (`IWA Panel` + `MWP Result Panel`) with `IWA Result H2`, `IWA Result Sub`, an `IWA CTA Row` of phone/email links, the moved "No pressure" note and the booking form (its `hidden` attribute removed). `cta-send` relabelled "Get this assessment by email". `mwp-adv-book-reveal` embed deleted; prefs, engine, dock and next-top embeds updated from `src/`.
 - Removed the "What's driving your estimate" heading and `data-mwp="drivers"` list from the result panel, because they repeated the summary box. No code change: the engine skips the list when the element is missing.
 - New class `IWA Question Row` (flex, space-between, centred, 1.5rem gap, 2rem bottom margin). `IWA Question` bottom margin moved to the row (now 0). Six rows added, one per stage, each holding the heading and an `IWA Btn` + `IWA Btn Primary` link with `data-mwp="next-top"`. New embed `mwp-adv-next-top`.
 - New caveat lines, "Final price depends on scope and design revisions." (class `IWA Est Note`): `data-mwp="est-caveat"` under the running figure and `data-mwp="big-est-caveat"` under the final estimate. `dock.css` hides `est-caveat` in the collapsed mobile dock.

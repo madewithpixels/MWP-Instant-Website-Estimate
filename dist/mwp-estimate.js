@@ -72,6 +72,8 @@
       complex: { h: 'Your bespoke functionality', p: 'Because your project includes more advanced functionality, the best next step is a short discovery call so we can understand the details before pricing that part properly.' },
     },
     bespokeNote: 'Your project includes bespoke functionality, so part of the estimate needs a short discovery conversation before it can be priced accurately.',
+    /* Progress label while the booking panel is showing. */
+    bookLabel: 'Book a consultation',
     stageLabels: ['Your project', 'Your website', 'Your brand', 'Your content', 'Your visual assets', 'Your features', 'Your assessment'],
     finalGraph: { heading: 'What’s driving your estimate', sub: 'Your estimate reflects the level of design, content, assets and functionality your project is likely to need.' },
   };
@@ -396,6 +398,53 @@
     navEl = $('[data-mwp="nav"]');
   var psteps = $$('[data-mwp="pstep"]'),
     progEl = $('[data-mwp="progress"]');
+  /* End of the journey. From the last stage on, the summary box (graph column)
+     shows [data-mwp="sum-cta"]: "See assessment" loads the result panel and
+     "Book a consultation" loads the booking panel, both in the left column. */
+  var sumCta = $('[data-mwp="sum-cta"]'),
+    ctaSee = $('[data-mwp="cta-see"]'),
+    ctaBook = $('[data-mwp="cta-book"]'),
+    resultEl = $('[data-mwp="result"]'),
+    bookPanel = $('[data-mwp="book-panel"]');
+  var view = 'stage';
+  function show(el, on) {
+    if (!el) return;
+    el.style.display = on ? '' : 'none';
+  }
+  function setView(v) {
+    view = v;
+    var last = v === 'stage' && stageIndex === LAST,
+      cta = last || v !== 'stage';
+    root.classList.toggle('mwp-result-active', v === 'result');
+    root.classList.toggle('mwp-book-active', v === 'book');
+    root.classList.toggle('mwp-cta-active', cta);
+    show(sumCta, cta);
+    show(ctaSee, last || v === 'book');
+    show(ctaBook, last || v === 'result');
+    [
+      [resultEl, 'result'],
+      [bookPanel, 'book'],
+    ].forEach(function (x) {
+      if (!x[0]) return;
+      x[0].setAttribute('data-active', v === x[1] ? 'true' : 'false');
+      show(x[0], v === x[1]);
+    });
+  }
+  function announce(v) {
+    var ev;
+    try {
+      ev = new CustomEvent('mwp:view', { detail: { view: v } });
+    } catch (e) {
+      ev = document.createEvent('CustomEvent');
+      ev.initCustomEvent('mwp:view', false, false, { view: v });
+    }
+    root.dispatchEvent(ev);
+  }
+  /* The last stage moves on through the summary box, so its Next buttons go */
+  if (STAGES[LAST])
+    $$('[data-mwp="next-top"]', STAGES[LAST].el).forEach(function (b) {
+      show(b, false);
+    });
   function stageComplete(n) {
     var s = STAGES[n];
     if (!s) return true;
@@ -405,7 +454,7 @@
   function updateNav() {
     if (backBtn) backBtn.disabled = stageIndex === 0;
     if (nextBtn) {
-      nextBtn.textContent = stageIndex === LAST ? 'See my assessment' : 'Next';
+      show(nextBtn, stageIndex !== LAST);
       nextBtn.disabled = !stageComplete(stageIndex);
     }
   }
@@ -416,11 +465,7 @@
       s.el.setAttribute('data-active', on ? 'true' : 'false');
       s.el.style.display = on ? '' : 'none';
     });
-    var _r = $('[data-mwp="result"]');
-    if (_r) {
-      _r.setAttribute('data-active', 'false');
-      _r.style.display = 'none';
-    }
+    setView('stage');
     if (navEl) navEl.style.display = 'flex';
     psteps.forEach(function (d, i) {
       d.classList.toggle('is-done', i < n);
@@ -470,7 +515,10 @@
     var support = bits.length ? ' with some support needed around ' + bits.join(' and ') : '';
     return 'Based on your answers, this is likely to be a ' + size + ' project' + support + '. That’s a common starting point, and it gives us a clear opportunity to create something more polished and useful than a simple brochure site.';
   }
-  function showResult() {
+  /* v = 'result' (See assessment) or 'book' (Book a consultation). Both fill the
+     result panel, so switching between them later needs no recompute. */
+  function showResult(v) {
+    v = v === 'book' ? 'book' : 'result';
     var r = compute(sel),
       type = resultType(sel, r);
     STAGES.forEach(function (s) {
@@ -478,17 +526,13 @@
       s.el.style.display = 'none';
     });
     if (navEl) navEl.style.display = 'none';
-    var _r = $('[data-mwp="result"]');
-    if (_r) {
-      _r.setAttribute('data-active', 'true');
-      _r.style.display = '';
-    }
+    setView(v);
     psteps.forEach(function (d, i) {
       d.classList.toggle('is-done', i < STAGES.length);
       d.classList.toggle('is-current', i === STAGES.length);
     });
     if (progEl) progEl.setAttribute('aria-valuenow', STAGES.length + 1);
-    T('[data-mwp="stage-label"]', P.stageLabels[STAGES.length]);
+    T('[data-mwp="stage-label"]', v === 'book' ? P.bookLabel || 'Book a consultation' : P.stageLabels[STAGES.length]);
     T('[data-mwp="result-type"]', P.resultTypes[type].badge);
     var _rt = $('[data-mwp="result-type"]');
     if (_rt) _rt.setAttribute('data-type', type);
@@ -528,10 +572,37 @@
         rc.appendChild(box);
       });
     }
-    var bk = $('[data-mwp="cta-book"]');
-    if (bk) bk.setAttribute('href', P.links.bookingUrl);
     syncForm(type, r);
+    if (v === 'book') focusBook();
+    announce(v);
   }
+  /* Focus the booking form's first field, except on touch screens where it
+     would pop the keyboard up over the panel. */
+  function focusBook() {
+    if (window.matchMedia && window.matchMedia('(pointer: coarse)').matches) return;
+    var f = $('[data-mwp="book"]'),
+      i = f && (f.querySelector('[data-mwp="book-first"]') || f.querySelector('input,textarea'));
+    if (!i) return;
+    try {
+      i.focus({ preventScroll: true });
+    } catch (e) {
+      i.focus();
+    }
+  }
+  if (ctaSee)
+    ctaSee.addEventListener('click', function (e) {
+      if (e && e.preventDefault) e.preventDefault();
+      showResult('result');
+    });
+  if (ctaBook) {
+    ctaBook.setAttribute('href', P.links.bookingUrl);
+    ctaBook.addEventListener('click', function (e) {
+      if (e && e.preventDefault) e.preventDefault();
+      showResult('book');
+    });
+  }
+  var bookForm = $('[data-mwp="book"]');
+  if (bookForm) bookForm.hidden = false;
   function syncForm(type, r) {
     r = r || compute(sel);
     type = type || resultType(sel, r);
@@ -590,29 +661,6 @@
   var _sf = $('[data-mwp="send"]');
   if (_sf) _sf.hidden = true;
   showStage(0);
-})();
-
-/* ---- book-reveal.js ---- */
-/* MWP Assessment — "Book a call" reveal.
- * Toggles the [data-mwp="book"] form when [data-mwp="cta-book"] is clicked and
- * focuses its first field.
- */
-(function () {
-  'use strict';
-  var r = document.getElementById('mwp-adv');
-  if (!r) return;
-  var b = r.querySelector('[data-mwp="cta-book"]'),
-    f = r.querySelector('[data-mwp="book"]');
-  if (f) f.hidden = true;
-  if (b && f)
-    b.addEventListener('click', function (e) {
-      if (e && e.preventDefault) e.preventDefault();
-      f.hidden = !f.hidden;
-      if (!f.hidden) {
-        var i = f.querySelector('[data-mwp="book-first"]') || f.querySelector('input,textarea');
-        if (i) i.focus();
-      }
-    });
 })();
 
 /* ---- rating.js ---- */
@@ -722,8 +770,8 @@
 /* MWP Assessment — mobile estimate dock behaviour.
  * Below 768px the graph column becomes a fixed dock. Tapping the total
  * ([data-mwp="est"]) toggles .is-open (bars shown). Also mirrors category
- * values into the compact [data-short] tiles and flags #mwp-adv with
- * .mwp-result-active while the result panel is showing.
+ * values into the compact [data-short] tiles. The engine flags #mwp-adv with
+ * .mwp-cta-active / .mwp-result-active / .mwp-book-active; dock.css uses them.
  */
 (function () {
   'use strict';
@@ -783,16 +831,6 @@
       var src = root.querySelector('[data-val="' + k + '"]');
       if (src) mo.observe(src, { childList: true, characterData: true, subtree: true });
     });
-
-    /* Hide the dock once the assessment is showing */
-    var res = root.querySelector('[data-mwp="result"]');
-    if (res) {
-      var flag = function () {
-        root.classList.toggle('mwp-result-active', res.getAttribute('data-active') === 'true');
-      };
-      new MutationObserver(flag).observe(res, { attributes: true, attributeFilter: ['data-active'] });
-      flag();
-    }
   }
 })();
 
@@ -1033,6 +1071,19 @@
     if (!moved || !(window.matchMedia && window.matchMedia(MQ).matches)) return;
     var off = parseFloat(getComputedStyle(root).scrollMarginTop) || 0;
     var to = Math.max(0, window.pageYOffset + target.getBoundingClientRect().top - off);
+    if (Math.abs(to - window.pageYOffset) > 8) smoothTo(to);
+  });
+
+  /* "See assessment" / "Book a consultation" (summary box) swap the left
+     column's content. Bring its top into view when it's off screen, or on the
+     same tablet/mobile/short screens as above. */
+  var qcol = root.querySelector('[data-mwp="q-col"]') || target;
+  root.addEventListener('mwp:view', function () {
+    var off = parseFloat(getComputedStyle(root).scrollMarginTop) || 0;
+    var top = qcol.getBoundingClientRect().top;
+    var mq = window.matchMedia && window.matchMedia(MQ).matches;
+    if (!mq && top >= off) return;
+    var to = Math.max(0, window.pageYOffset + top - off);
     if (Math.abs(to - window.pageYOffset) > 8) smoothTo(to);
   });
 

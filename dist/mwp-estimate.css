@@ -118,8 +118,9 @@
  *   - Back / Next row ........... "IWA Nav" (no translate at Mobile)
  *   - heading + sub hidden ...... "MWP Graph Heading" / "MWP Graph Sub"
  *
- * Only the rules below live here, because they depend on the .is-open and
- * .mwp-result-active classes dock.js toggles — Webflow has no UI for
+ * Only the rules below live here, because they depend on the .is-open class
+ * dock.js toggles and the .mwp-cta-active / .mwp-result-active /
+ * .mwp-book-active classes the engine sets — Webflow has no UI for
  * parent-state selectors.
  */
 @media screen and (max-width: 767px) {
@@ -142,9 +143,29 @@
   #mwp-adv [data-mwp='graph-col'].is-open [data-mwp='est-caveat'] { display: block; }
   #mwp-adv [data-mwp='graph-col'].is-open [data-mwp='dock-tiles'] { display: none; }
 
-  /* Hidden on the assessment screen — the result panel already shows the breakdown */
-  #mwp-adv.mwp-result-active [data-mwp='graph-col'] { display: none; }
-  #mwp-adv.mwp-result-active [data-mwp='q-col'] { margin-bottom: 0; }
+  /* Last stage: the dock also carries the "Book a consultation" / "See assessment"
+     buttons ([data-mwp='sum-cta']), so the question panel needs more clearance */
+  #mwp-adv.mwp-cta-active [data-mwp='q-col'] { margin-bottom: 180px; }
+
+  /* Assessment and booking screens: the left panel already shows the figures,
+     so the dock shrinks to just the remaining button */
+  #mwp-adv.mwp-result-active [data-mwp='est'],
+  #mwp-adv.mwp-result-active [data-mwp='bars'],
+  #mwp-adv.mwp-result-active [data-mwp='dock-tiles'],
+  #mwp-adv.mwp-book-active [data-mwp='est'],
+  #mwp-adv.mwp-book-active [data-mwp='bars'],
+  #mwp-adv.mwp-book-active [data-mwp='dock-tiles'] { display: none; }
+  #mwp-adv.mwp-result-active [data-mwp='q-col'],
+  #mwp-adv.mwp-book-active [data-mwp='q-col'] { margin-bottom: 90px; }
+
+  /* Buttons share the dock width equally. The row itself is styled on the
+     "IWA Sum CTA" class; the buttons carry the shared IWA Btn classes, so
+     this dock-only sizing can't live on a class. */
+  #mwp-adv [data-mwp='sum-cta'] > * {
+    flex: 1 1 0;
+    padding-left: 10px;
+    padding-right: 10px;
+  }
 }
 
 /* MWP Estimate — "Get started" launcher states.

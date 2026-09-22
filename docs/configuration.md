@@ -30,7 +30,8 @@ Use page overrides for quick tweaks and testing. When a change should stick, upd
 | `scrollOnNext` | `'(max-width: 991px), (max-height: 800px)'` | Media query. When it matches (tablet, mobile, short screens), moving to the next stage scrolls the progress bar to the top of the viewport, below the navbar. Set `'none'` to turn it off. |
 | `graphScale` | `null` | `null` = each bar's 100% is that category's highest possible max. Or pass `{ website: 8000, … }`. |
 | `currency.symbol` / `locale` | `'£'` / `'en-GB'` | Money formatting. |
-| `links.bookingUrl` | `'#REPLACE_WITH_BOOKING_URL'` | Set as the `href` of `cta-book`. **Still a placeholder:** set it before launch. |
+| `links.bookingUrl` | `'#REPLACE_WITH_BOOKING_URL'` | Set as the `href` of `cta-book`. Clicks open the booking panel instead, so it only shows on hover or in a new tab (see the roadmap). |
+| `bookLabel` | `'Book a consultation'` | Progress label while the booking panel is showing. |
 | `links.sendAssessmentMode` | `'form'` | Reserved. |
 | `categories` | 5 entries | Keys and labels for the bars and drivers. The keys must stay `website`, `brand`, `content`, `assets`, `func`. |
 | `contentMatrix` | see [pricing](pricing-model.md) | Content cost by size × content state. |

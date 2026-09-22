@@ -1,8 +1,8 @@
 /* MWP Assessment — mobile estimate dock behaviour.
  * Below 768px the graph column becomes a fixed dock. Tapping the total
  * ([data-mwp="est"]) toggles .is-open (bars shown). Also mirrors category
- * values into the compact [data-short] tiles and flags #mwp-adv with
- * .mwp-result-active while the result panel is showing.
+ * values into the compact [data-short] tiles. The engine flags #mwp-adv with
+ * .mwp-cta-active / .mwp-result-active / .mwp-book-active; dock.css uses them.
  */
 (function () {
   'use strict';
@@ -62,15 +62,5 @@
       var src = root.querySelector('[data-val="' + k + '"]');
       if (src) mo.observe(src, { childList: true, characterData: true, subtree: true });
     });
-
-    /* Hide the dock once the assessment is showing */
-    var res = root.querySelector('[data-mwp="result"]');
-    if (res) {
-      var flag = function () {
-        root.classList.toggle('mwp-result-active', res.getAttribute('data-active') === 'true');
-      };
-      new MutationObserver(flag).observe(res, { attributes: true, attributeFilter: ['data-active'] });
-      flag();
-    }
   }
 })();

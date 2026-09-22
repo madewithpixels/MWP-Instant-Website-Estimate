@@ -27,7 +27,6 @@ When you move the live page over from its inline embeds, follow [docs/webflow-se
 src/js/
   prefs.js         Default settings (window.MWP_PREFS). Pages can override top-level keys.
   engine.js        Stages, answers, pricing, live graph, result panel, hidden form sync.
-  book-reveal.js   "Book a call" button reveals the booking form.
   rating.js        Star rating widgets.
   tips.js          "Keeping costs towards the lower end" tips on the result screen.
   dock.js          Mobile estimate dock (collapse/expand, compact tiles, hide on result).

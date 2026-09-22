@@ -55,6 +55,19 @@
     if (Math.abs(to - window.pageYOffset) > 8) smoothTo(to);
   });
 
+  /* "See assessment" / "Book a consultation" (summary box) swap the left
+     column's content. Bring its top into view when it's off screen, or on the
+     same tablet/mobile/short screens as above. */
+  var qcol = root.querySelector('[data-mwp="q-col"]') || target;
+  root.addEventListener('mwp:view', function () {
+    var off = parseFloat(getComputedStyle(root).scrollMarginTop) || 0;
+    var top = qcol.getBoundingClientRect().top;
+    var mq = window.matchMedia && window.matchMedia(MQ).matches;
+    if (!mq && top >= off) return;
+    var to = Math.max(0, window.pageYOffset + top - off);
+    if (Math.abs(to - window.pageYOffset) > 8) smoothTo(to);
+  });
+
   /* Lenis-safe smooth scroll (instant steps; see start.js) */
   function jump(y) {
     try {

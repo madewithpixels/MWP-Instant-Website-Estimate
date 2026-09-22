@@ -11,9 +11,9 @@ The tool works and is committed, but the latest features aren't released yet and
 - **Live page:** the Estimate page on `madewithpixels-dev` still runs from nine HTML Embed elements, not the jsDelivr bundle.
 - **Tests:** `npm test` builds and runs the jsdom smoke test on both bundles.
 
-## Next release: v1.1.0
+## Next release: v2.0.0
 
-The unreleased work should ship as **v1.1.0**: it adds features and new prefs keys (`startLabel`, `scrollOnNext`) without breaking existing pages.
+The unreleased work should ship as **v2.0.0**. It started as a minor release, but the new end of the journey (22 Sep) changes the markup contract: `cta-book` moved to the summary box, `book-panel`, `sum-cta` and `cta-see` are new, and `book-reveal.js` is gone. Per `docs/releasing.md` that's a major version. (Earlier sections below still say v1.1.0; read them as v2.0.0.)
 
 There's a version mismatch to fix first. `package.json` still says `1.0.0`, so the committed `dist/` files contain the new code but carry a v1.0.0 banner. They'd also report `1.0.0` from `window.__MWP_ESTIMATE_LOADED__`.
 
@@ -77,6 +77,12 @@ Moving the remaining hard-coded copy into `MWP_PREFS` would let you edit wording
 | "What's shaping your estimate" graph heading | listed as hard-coded in `docs/configuration.md` |
 
 The tips need care: their `when` rules are functions, so only the text can move cleanly into prefs. The rules could stay in code, keyed by tip ID.
+
+## Booking panel follow-ups
+
+- [ ] **Phone number:** the `book-tel` link still says "Phone number" and dials `+440000000000`. Set the real number and text in Webflow.
+- [ ] **New booking form:** the panel reuses the old Name / Email / Comment form (with the star rating) until the new one is built.
+- [ ] **Send the assessment with bookings:** the booking form has no hidden `data-f` fields, so booking submissions don't include the answers or estimate. Add the inputs to the new form and make `syncForm()` fill every match (it only fills the first today).
 
 ## Smaller clean-ups and open questions
 
