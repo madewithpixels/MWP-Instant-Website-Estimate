@@ -41,7 +41,7 @@ src/css/
 dist/              Built files served by jsDelivr (committed on purpose).
 test/              jsdom smoke test against a minimal copy of the markup.
 webflow/           Paste-ready snippets for Webflow custom code.
-docs/              Setup, markup contract, pricing model, configuration, releasing.
+docs/              Setup, markup contract, pricing model, configuration, releasing, roadmap.
 ```
 
 ## Development
@@ -63,6 +63,7 @@ The smoke test checks the headline behaviour: the figure starts at £0, goes to 
 - [Pricing model](docs/pricing-model.md): how the estimate is calculated
 - [Configuration](docs/configuration.md): `MWP_PREFS` reference
 - [Releasing](docs/releasing.md): versioning, tagging and jsDelivr cache
+- [Roadmap](docs/roadmap.md): what's next — v1.1.0 release, CDN migration, booking link, copy into prefs
 - [Changelog](CHANGELOG.md)
 
 ## Principles
