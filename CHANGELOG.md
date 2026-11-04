@@ -1,6 +1,14 @@
 # Changelog
 
-## Unreleased
+## v2.0.0 — 2026-11-04
+
+### Changed — assessment screen copy and advice lines (R-051, R-050; wording approved by Michael 2–3 Nov 2026)
+- **Tighter copy** in `prefs.js`: result lead line ("A focused project with a clear way forward: good news for both budget and timing."), progress label "Your results", result graph heading "What makes up the cost" / "Each part of your project adds to the range.", booking progress label "Book a free chat". New prefs key `stageGraph` ("Your estimate so far" / "Each answer updates the range as you go.") replaces the hard-coded heading during the questions and also sets the sub-line. The content-led, brand-led, asset-led and "more involved" lead lines are rewritten in the same friendly, advice-first voice (drafted by Claude, 4 Nov 2026: Michael to approve).
+- **Shaping paragraph** (`engine.js`): "From your answers, a {size} looks like the right fit…", and "Not sure" no longer reads as a project size.
+- **Tips** (`tips.js`): the two shared tips are shortened as approved.
+
+### Added
+- **Per-answer advice lines** (`advice.js`, new optional `data-mwp="advice"` / `advice-list` markup): one short line for each answer on questions 1–5, plus up to three for the features picked, capped at six in total ("not sure" lines go first). Copy as approved by Michael on 3 Nov 2026.
 
 ### Changed — end of the journey (markup contract change)
 - **Step 6 moves on from the summary box.** On the last stage the Next buttons are hidden (Back stays) and the summary box shows **Book a consultation** and **See assessment** (`data-mwp="sum-cta"`, class `IWA Sum CTA`). On desktop the row is sticky to the bottom of the screen, so the buttons stay visible even when the summary box is taller than the window. On mobile they sit side by side in the dock under the total.

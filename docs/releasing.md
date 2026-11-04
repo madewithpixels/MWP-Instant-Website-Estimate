@@ -1,10 +1,10 @@
 # Releasing
 
-jsDelivr serves files straight from GitHub tags:
+jsDelivr serves files straight from GitHub tags. Use the **all-lowercase** repo name and the version **without** the `v` (so tag `v2.0.0` is `@2.0.0`). The capitalised name and the `@v2.0.0` form can fail with "Failed to fetch version info" because jsDelivr caches that failure (seen on 4 November 2026):
 
 ```
-https://cdn.jsdelivr.net/gh/madewithpixels/MWP-Instant-Website-Estimate@<tag>/dist/mwp-estimate.min.js
-https://cdn.jsdelivr.net/gh/madewithpixels/MWP-Instant-Website-Estimate@<tag>/dist/mwp-estimate.min.css
+https://cdn.jsdelivr.net/gh/madewithpixels/mwp-instant-website-estimate@<version>/dist/mwp-estimate.min.js
+https://cdn.jsdelivr.net/gh/madewithpixels/mwp-instant-website-estimate@<version>/dist/mwp-estimate.min.css
 ```
 
 `dist/` is **committed on purpose**, because jsDelivr doesn't run a build.
@@ -34,7 +34,7 @@ https://cdn.jsdelivr.net/gh/madewithpixels/MWP-Instant-Website-Estimate@<tag>/di
 
 - **Always pin an exact tag** (`@v1.0.0`) in Webflow. A pinned tag is cached permanently and never changes under you.
 - `@latest` or a range like `@1` picks up new tags automatically, but jsDelivr caches these for up to 7 days. Use them only on a test page.
-- To force-refresh a floating alias after tagging, request `https://purge.jsdelivr.net/gh/madewithpixels/MWP-Instant-Website-Estimate@latest/dist/mwp-estimate.min.js`.
+- To force-refresh a floating alias after tagging, request `https://purge.jsdelivr.net/gh/madewithpixels/mwp-instant-website-estimate@latest/dist/mwp-estimate.min.js`.
 - Never move or re-push an existing tag. Cut a new patch version instead.
 
 ## Checking a release
