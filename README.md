@@ -13,8 +13,8 @@ Webflow page (structure, classes, copy)  ──►  data-* attributes  ◄──
 Put this in **Page settings → Custom code → Before `</body>`**:
 
 ```html
-<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/madewithpixels/mwp-instant-website-estimate@2.0.0/dist/mwp-estimate.min.css" />
-<script src="https://cdn.jsdelivr.net/gh/madewithpixels/mwp-instant-website-estimate@2.0.0/dist/mwp-estimate.min.js"></script>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/madewithpixels/mwp-instant-website-estimate@3.0.0/dist/mwp-estimate.min.css" />
+<script src="https://cdn.jsdelivr.net/gh/madewithpixels/mwp-instant-website-estimate@3.0.0/dist/mwp-estimate.min.js"></script>
 ```
 
 The page needs a `<section id="mwp-adv">` built to the [markup contract](docs/markup-contract.md). To override settings such as the booking URL or the start figure without a new release, see [configuration](docs/configuration.md).
@@ -28,7 +28,7 @@ src/js/
   prefs.js         Default settings (window.MWP_PREFS). Pages can override top-level keys.
   engine.js        Stages, answers, pricing, live graph, result panel, hidden form sync.
   rating.js        Star rating widgets.
-  tips.js          "Keeping costs towards the lower end" tips on the result screen.
+  tips.js          "How to keep cost and time down" tips on the result screen.
   dock.js          Mobile estimate dock (collapse/expand, compact tiles, hide on result).
   start.js         "Get started" launcher: fixed progress bar that drops into place on start.
   next-top.js      Extra Next button beside each question; disabled state for both Next buttons.

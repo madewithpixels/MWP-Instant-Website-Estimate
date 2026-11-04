@@ -7,7 +7,7 @@ Prices come from two places:
 - **Option attributes in Webflow** for website size, brand, visual assets and individual features. To change these, edit the attribute on the option in the Designer. No release needed.
 - **`MWP_PREFS`** for the content matrix, CMS bands and the stage 1 start figure. See [configuration.md](configuration.md).
 
-Values below are as of 22 Sep 2026. When both ends of a range are equal it's shown as a single figure, e.g. £1,000.
+Values below are as of 4 November 2026 (v3.0.0, set by Michael Auty). When both ends of a range are equal it's shown as a single figure, e.g. £1,000.
 
 ## Running figure before a size is chosen
 
@@ -24,34 +24,35 @@ Stage 1 doesn't add to the price. It moves the running figure off zero and gives
 
 | Option id | Label | Range |
 | --- | --- | --- |
-| `single` | Single page website | £500–£850 (shows as £500–£1,000 after rounding) |
-| `small` | Small website | £850–£1,500 (shows as £750–£1,500 after rounding) |
-| `medium` | Medium website | £1,500–£3,000 |
-| `large` | Larger website | £3,000–£5,000 |
+| `small` | Small: 1–5 pages | £500–£1,500 |
+| `medium` | Medium: 5–15 pages | £1,000–£3,000 |
+| `large` | Large: 15–30+ pages | £3,000–£5,000 |
 | `notsure` | Not sure | £1,000 (`data-base-min` = `data-base-max` = 1000) |
+
+There is no single-page option (v3.0.0): a one-page site prices as small.
 
 ## Brand: `data-brand-min` / `data-brand-max` on `brand_state` options
 
-| Option id | Range |
-| --- | --- |
-| `established` | £0 |
-| `logo-assets` | £150–£300 |
-| `logo-only` | £300–£500 |
-| `brand-help` | £500–£900 (tag `brand-development`) |
+| Option id | Label | Range |
+| --- | --- | --- |
+| `established` | We have a logo and brand guidelines | £0 |
+| `logo-only` | We have a logo | £0 |
+| `brand-help` | We need help with our brand | £150–£300 (tag `brand-development`) |
+
+Only asking for help costs anything.
 
 ## Content: `contentMatrix[website_size][content_state]` in prefs
 
 Content cost depends on site size. It's only counted once a size is chosen.
 
-| Size ↓ / Content → | `everything` | `most` | `some` | `help` |
-| --- | --- | --- | --- | --- |
-| `single` | £0 | £150–£250 | £250–£350 | £350–£500 |
-| `small` | £0 | £250–£400 | £400–£650 | £500–£800 |
-| `medium` | £0 | £400–£650 | £650–£900 | £700–£1,050 |
-| `large` | £0 | £650–£900 | £900–£1,300 | £1,050–£1,800 |
-| `notsure` | £0 | £250–£400 | £400–£650 | £500–£800 |
+| Size ↓ / Content → | `everything` (written and approved) | `some` (exists, needs refining) | `help` (we need help writing it) |
+| --- | --- | --- | --- |
+| `small` | £0 | £150–£350 | £350–£700 |
+| `medium` | £0 | £350–£500 | £500–£1,000 |
+| `large` | £0 | £500–£1,000 | £750–£1,500 |
+| `notsure` | £0 | £150–£350 | £350–£700 |
 
-> The content options also carry `data-content-multiplier` (0 / 0.35 / 0.65 / 1). The engine reads the attribute but **doesn't use it** for pricing: the matrix is what counts.
+"Not sure" uses the small figures.
 
 ## Visual assets: `data-asset-min` / `data-asset-max` on `visual_assets` options
 
@@ -59,11 +60,7 @@ Content cost depends on site size. It's only counted once a size is chosen.
 | --- | --- |
 | `pro` | £0 |
 | `some-imagery` | £150–£350 |
-| `phone` | £300–£700 |
-| `little` | £500–£1,200 |
-| `assets-notsure` | £300–£700 |
-
-> These options also have `data-complexity` (low → high). The engine only acts on `data-complexity="consultation"` (features), so the asset values are informational.
+| `little` | £250–£500 |
 
 ## Functionality: `features` stage (multi-select)
 
@@ -84,14 +81,15 @@ Content cost depends on site size. It's only counted once a size is chosen.
 | `booking` | £500–£1,200 | |
 | `crm` | £500–£1,200 | |
 | `ecom` | £1,000–£2,500 | tag `ecommerce` |
+| `social` | £500–£1,000 | Social media campaign. Added in v3.0.0, as a feature because it must come with a website. |
 | `ai` | not priced | `data-complexity="consultation"` |
 | `bespoke` | not priced | `data-complexity="consultation"` |
 
-Any `consultation` option sets the **bespoke** flag. The estimate note and the big estimate then add "+ bespoke functionality to be scoped", and the result type becomes `complex`.
+Any `consultation` option sets the **bespoke** flag. The running estimate note and the summary paragraph's closing sentence then mention it, and the result type becomes `complex`.
 
 ## Result type
 
-The first matching type in `resultTypePriority` wins:
+Not shown to the visitor since v3.0.0, but still written to the hidden `result_type` field. The first matching type in `resultTypePriority` wins:
 
 | Type | When |
 | --- | --- |
@@ -103,16 +101,16 @@ The first matching type in `resultTypePriority` wins:
 
 ## Worked example
 
-New site, small website, logo only, some content, phone photos, blog:
+New site, small website, we have a logo, content exists and needs refining, some imagery, blog and booking system:
 
 | Category | Range |
 | --- | --- |
-| Website (small) | £850–£1,500 |
-| Brand (logo-only) | £300–£500 |
-| Content (small × some) | £400–£650 |
-| Assets (phone) | £300–£700 |
-| Functionality (1 CMS) | £0–£250 |
-| **Raw total** | £1,850–£3,600 |
-| **Shown** | **£1,750–£4,000**, `content-led` |
+| Website (small) | £500–£1,500 |
+| Brand (logo-only) | £0 |
+| Content (small × some) | £150–£350 |
+| Assets (some-imagery) | £150–£350 |
+| Functionality (1 CMS £0–£250, booking £500–£1,200) | £500–£1,450 |
+| **Raw total** | £1,300–£3,650 |
+| **Shown** | **£1,250–£4,000**, `content-led` |
 
 The smoke test checks this example.

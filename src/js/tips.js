@@ -13,11 +13,11 @@
   if (!box || !list || !res) return;
   var TIPS = [
     {
-      when: function (a) { return /^(most|some|help)$/.test(a.content_state); },
+      when: function (a) { return /^(some|help)$/.test(a.content_state); },
       text: 'Supplying final, approved copy before design starts is the single biggest saving. It removes rewriting and extra rounds.',
     },
     {
-      when: function (a) { return /^(phone|little)$/.test(a.visual_assets); },
+      when: function (a) { return /^little$/.test(a.visual_assets); },
       text: 'Good photos of your team, premises or products, even from a recent phone, cut down on stock or custom imagery.',
     },
     {

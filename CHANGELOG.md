@@ -1,5 +1,28 @@
 # Changelog
 
+## v3.0.0 — unreleased
+
+**Breaking (markup contract):** new answer ids, a new result screen. The Webflow page must be updated with this release. See `docs/webflow-setup.md`. Specified by Michael Auty on 4 November 2026 (scoping notes: `claude/estimate-v3-scoping-notes.md` in the Claude project).
+
+### Changed — questions and prices
+- **Step 1** has four answers: new site, redesign, improvements, "Help building integrated business tools" (a route to a call, no price). "I'm not sure" is gone.
+- **Step 2**: small (1–5 pages) £500–£1,500, medium (5–15) £1,000–£3,000, large (15–30+) £3,000–£5,000, not sure £1,000. No single-page answer.
+- **Step 3** (brand), three answers: logo and guidelines £0, logo £0, need help £150–£300. Ids `established`, `logo-only`, `brand-help`; `logo-assets` removed.
+- **Step 4** (content), three answers: written and approved £0; exists, needs refining (`some`) £150–£350 / £350–£500 / £500–£1,000 by size; need help writing (`help`) £350–£700 / £500–£1,000 / £750–£1,500. `most` removed. "Not sure" size uses the small figures.
+- **Step 5** (images): "mostly phone photos" and "not sure" removed; "little or none" is £250–£500.
+- **Step 6** (features): new `social` (social media campaign, £500–£1,000).
+- **Side panel** sub-heading while answering: "Answer the questions, the price updates as you go".
+
+### Changed — result screen
+- One **summary paragraph** (`data-mwp="shaping"`) built from the answers (`summary` in prefs), then five blocks in `data-mwp="recos"`: Your website, brand, content (three versions), images, functionality (two routes). Copy in `blocks` in prefs. `is-website` is styled by the tool's CSS; the other four use the existing Webflow combos.
+- The badge and lead line (`result-type`, `result-sub`) no longer get written; `resultTypes` and `recommendations` are gone from prefs. `result_type` is still sent in the hidden form.
+- The price no longer needs to appear in the left card (`big-est`, `big-est-caveat` are optional).
+- `recommendation` in the form is now the summary paragraph.
+- Tips (`tips.js`) stay. The "phone photos" tip rule now only fires for "little or none".
+
+### Removed
+- `advice.js` and the optional `advice` / `advice-list` markup (the per-answer advice lines from v2.0.0).
+
 ## v2.0.0 — 2026-11-04
 
 ### Changed — assessment screen copy and advice lines (R-051, R-050; wording approved by Michael 2–3 Nov 2026)

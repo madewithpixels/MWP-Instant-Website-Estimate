@@ -37,9 +37,10 @@ Use page overrides for quick tweaks and testing. When a change should stick, upd
 | `contentMatrix` | see [pricing](pricing-model.md) | Content cost by size × content state. |
 | `cmsBands` | see [pricing](pricing-model.md) | CMS collection count → range. |
 | `resultTypePriority` | `complex, brand-led, content-led, asset-led, standard` | Order in which result types are tested. |
-| `resultTypes.<type>.badge` / `.sub` | copy | Badge text and sub-line on the result screen. |
 | `driverCopy.<cat>` | copy | One line per category in the optional `drivers` list on the result screen. Unused while that element isn't on the page. |
-| `recommendations.<key>.h` / `.p` | copy | Recommendation boxes (`brand`, `content`, `assets`, `complex`). |
+| `summary` | copy | The one-paragraph summary at the top of the result screen: opening phrase per project type, a phrase per size, brand, content, image and feature answer, and the two closing sentences. |
+| `blocks` | copy | The five "Your …" blocks (`website`, `brand`, `content`, `assets`, `func`). `content` has one version per content answer; `func` has two routes (`picked` or `none`). |
+| `improvementNote` | `''` | Optional extra line in "Your website" for people who chose "Improvements to an existing website". Empty = none. |
 | `bespokeNote` | copy | Note shown under the running figure when a consultation feature is selected. |
 | `stageLabels` | 7 labels | "Step n of 6 — label", plus the result label. |
 | `finalGraph.heading` / `.sub` | copy | Graph heading and sub on the result screen. |
@@ -49,9 +50,7 @@ Use page overrides for quick tweaks and testing. When a change should stick, upd
 
 These strings are hard-coded. Change them in the source and cut a release:
 
-- **Advice lines**: the `ADVICE` object at the top of `src/js/advice.js`, keyed by `data-answer-id`.
 - **Lower-end tips**: the `TIPS` array at the top of `src/js/tips.js`. Each tip has a `when(answers)` rule and `text`.
-- **Shaping sentence**: `shapingText()` in `engine.js`.
 - Button labels "Next" / "See my assessment", graph heading "What's shaping your estimate", dock "Breakdown" / "Less detail", and "Thanks — we'll email your assessment to …".
 
 Moving these into prefs would make a full copy pass possible without releases. It's a good candidate for 1.1.

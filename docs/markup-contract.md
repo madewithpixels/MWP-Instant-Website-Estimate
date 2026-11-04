@@ -19,7 +19,8 @@ Webflow class names (`IWA Panel`, `IWA Option`, `mwp-dock-tiles` and so on) are 
 | `data-cat="website\|brand\|content\|assets\|func"` | stage wrapper | – | Descriptive only. |
 | `data-active="true\|false"` | stage wrapper, result | – | Set by the engine. Stages are shown and hidden with inline `display`, so all of them stay visible in the Designer. |
 | `data-answer-id="<id>"` | option (link / button) | ✔ | Clickable, and responds to Space and Enter. The engine sets `aria-pressed` (single) or `aria-checked` (multi) and the `.is-selected` class. |
-| `data-label` | option | ✔ | Text used in summaries and the "shaping" sentence. Falls back to the option's text. |
+| Answer ids | – | ✔ | These ids drive prices, tips and the result blocks, so keep them. `project_type`: `new-site`, `redesign`, `improvement`, `wider-support`. `website_size`: `small`, `medium`, `large`, `notsure`. `brand_state`: `established`, `logo-only`, `brand-help`. `content_state`: `everything`, `some`, `help`. `visual_assets`: `pro`, `some-imagery`, `little`. `features`: `blog`, `portfolio`, `services`, `downloads`, `events`, `testimonials`, `team`, `adv-forms`, `booking`, `crm`, `ecom`, `ai`, `bespoke`, `social`. Labels and descriptions are Webflow text and can change freely. |
+| `data-label` | option | ✔ | Text used in the summary paragraph when a feature has no entry in `summary.features`. Falls back to the option's text. |
 | `data-result-tags` | option | – | Space-separated tags written to `complexity_tags`. |
 | Price attributes | option | – | See [pricing-model.md](pricing-model.md). |
 
@@ -61,15 +62,12 @@ Webflow class names (`IWA Panel`, `IWA Option`, `mwp-dock-tiles` and so on) are 
 | Attribute | Purpose |
 | --- | --- |
 | `data-mwp="result"` | Result panel. `data-active="true"` while showing. |
-| `data-mwp="result-type"` | Badge. Also gets `data-type="standard\|content-led\|brand-led\|asset-led\|complex"` for colour. |
-| `data-mwp="result-sub"`, `data-mwp="shaping"` | Result copy. |
+| `data-mwp="shaping"` | The summary paragraph (built from the answers, see `summary` in prefs). Since v3.0.0 the badge (`result-type`) and lead line (`result-sub`) are gone: the engine no longer writes to them, so delete them from the page. |
 | `data-mwp="drivers"` | *Optional.* Filled with `.mwp-driver` rows (one per category with a price, using `driverCopy`). Removed from the page on 22 Sep 2026 because it repeated the summary box. The engine skips it when it's missing, so adding the element back brings it back. |
-| `data-mwp="big-est"` | Final range (+ "bespoke functionality to be scoped"). |
-| `data-mwp="big-est-caveat"` | Static line under the final range. Edit the copy in Webflow. The scripts don't touch it. |
+| `data-mwp="big-est"`, `data-mwp="big-est-caveat"` | *Optional since v3.0.0.* The final range and its static line used to sit in the left card; the price now shows only in the graph column (`est-figure`, `est-caveat`). The engine skips them when missing. |
 | `data-mwp="tips"` → `data-mwp="tips-list"` | Lower-end tips. `tips.js` fills the list with `<p class="iwa-fine-print" data-mwp="tip">`. The whole block is hidden when no tip applies. |
-| `data-mwp="advice"` → `data-mwp="advice-list"` | *Optional.* Per-answer advice lines. `advice.js` fills the list with up to six `<p class="iwa-fine-print" data-mwp="advice-line">` (one per answer on questions 1–5, plus up to three feature lines), looked up by `data-answer-id`. The block is hidden when there is nothing to show. Copy is in `ADVICE` at the top of `src/js/advice.js`. |
-| `data-mwp="recos"` | Filled with `.mwp-reco.is-<key>` boxes (`h4.mwp-reco-h`, `p.mwp-reco-p`). |
-| `data-mwp="cta-send"` | "Get this assessment by email". Toggles the send form `data-mwp="send"` and focuses `data-mwp="email"`. |
+| `data-mwp="recos"` | Filled with the five "Your …" blocks, always in this order: `.mwp-reco.is-website`, `.is-brand`, `.is-content`, `.is-assets`, `.is-complex` (Functionality), each with an `h4.mwp-reco-h` and one or more `p.mwp-reco-p`. Webflow styles `is-brand`, `is-content`, `is-assets` and `is-complex`; the tool's own CSS styles `is-website`. |
+| `data-mwp="cta-send"` | "Email me these results". Toggles the send form `data-mwp="send"` and focuses `data-mwp="email"`. |
 | `data-mwp="send-go"`, `data-mwp="send-ok"`, `data-f="email"` | *Optional* custom send flow. It isn't on the page as of Sep 2026, where the send form submits natively through Webflow. |
 | `data-mwp="rating"` → `data-rate="1..5"` + `input[data-mwp="rating-value"]` | Star rating. Any number of rating blocks is supported. |
 
