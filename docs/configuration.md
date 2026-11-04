@@ -43,11 +43,13 @@ Use page overrides for quick tweaks and testing. When a change should stick, upd
 | `bespokeNote` | copy | Note shown under the running figure when a consultation feature is selected. |
 | `stageLabels` | 7 labels | "Step n of 6 — label", plus the result label. |
 | `finalGraph.heading` / `.sub` | copy | Graph heading and sub on the result screen. |
+| `stageGraph.heading` / `.sub` | copy | Graph heading and sub while the questions are being answered. |
 
 ## Copy that isn't in prefs (yet)
 
 These strings are hard-coded. Change them in the source and cut a release:
 
+- **Advice lines**: the `ADVICE` object at the top of `src/js/advice.js`, keyed by `data-answer-id`.
 - **Lower-end tips**: the `TIPS` array at the top of `src/js/tips.js`. Each tip has a `when(answers)` rule and `text`.
 - **Shaping sentence**: `shapingText()` in `engine.js`.
 - Button labels "Next" / "See my assessment", graph heading "What's shaping your estimate", dock "Breakdown" / "Less detail", and "Thanks — we'll email your assessment to …".

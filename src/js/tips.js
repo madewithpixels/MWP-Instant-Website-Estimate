@@ -26,11 +26,11 @@
     },
     {
       when: function (a) { return !!a.features; },
-      text: 'Start with the essentials and add features in a second phase. Webflow makes it easy to grow the site later.',
+      text: 'Start with the essentials and add extras later. Webflow makes growing the site easy.',
     },
     {
       when: function () { return true; },
-      text: 'A single point of contact and quick feedback keep the project on schedule. Fewer revision rounds means a lower final cost.',
+      text: 'Quick, consolidated feedback keeps the project on schedule, and fewer revision rounds mean a lower final cost.',
     },
   ];
   function val(k) {

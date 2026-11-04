@@ -394,7 +394,8 @@
     paint(committed, false);
     updateChoices(selUpTo(n));
     updateNav();
-    T('[data-mwp="graph-h"]', 'What’s shaping your estimate');
+    T('[data-mwp="graph-h"]', P.stageGraph.heading);
+    T('[data-mwp="graph-sub"]', P.stageGraph.sub);
   }
   function next() {
     if (!stageComplete(stageIndex)) return;
@@ -424,13 +425,13 @@
       back();
     });
   function shapingText(r) {
-    var size = sel.website_size ? optData('website_size', sel.website_size).label.toLowerCase() : 'website';
+    var size = sel.website_size && sel.website_size !== 'notsure' ? optData('website_size', sel.website_size).label.toLowerCase() : 'website';
     var bits = [];
     if (sel.content_state === 'some' || sel.content_state === 'help') bits.push('content');
     if (sel.visual_assets === 'phone' || sel.visual_assets === 'little') bits.push('visual assets');
     if (sel.brand_state === 'brand-help' || sel.brand_state === 'logo-only') bits.push('brand');
-    var support = bits.length ? ' with some support needed around ' + bits.join(' and ') : '';
-    return 'Based on your answers, this is likely to be a ' + size + ' project' + support + '. That’s a common starting point, and it gives us a clear opportunity to create something more polished and useful than a simple brochure site.';
+    var support = bits.length ? ', with some support needed around ' + bits.join(' and ') : '';
+    return 'From your answers, a ' + size + ' looks like the right fit' + support + '. It’s a sensible place to start, and it can still look polished and do real work for you.';
   }
   /* v = 'result' (See assessment) or 'book' (Book a consultation). Both fill the
      result panel, so switching between them later needs no recompute. */

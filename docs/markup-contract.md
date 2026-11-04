@@ -67,6 +67,7 @@ Webflow class names (`IWA Panel`, `IWA Option`, `mwp-dock-tiles` and so on) are 
 | `data-mwp="big-est"` | Final range (+ "bespoke functionality to be scoped"). |
 | `data-mwp="big-est-caveat"` | Static line under the final range. Edit the copy in Webflow. The scripts don't touch it. |
 | `data-mwp="tips"` → `data-mwp="tips-list"` | Lower-end tips. `tips.js` fills the list with `<p class="iwa-fine-print" data-mwp="tip">`. The whole block is hidden when no tip applies. |
+| `data-mwp="advice"` → `data-mwp="advice-list"` | *Optional.* Per-answer advice lines. `advice.js` fills the list with up to six `<p class="iwa-fine-print" data-mwp="advice-line">` (one per answer on questions 1–5, plus up to three feature lines), looked up by `data-answer-id`. The block is hidden when there is nothing to show. Copy is in `ADVICE` at the top of `src/js/advice.js`. |
 | `data-mwp="recos"` | Filled with `.mwp-reco.is-<key>` boxes (`h4.mwp-reco-h`, `p.mwp-reco-p`). |
 | `data-mwp="cta-send"` | "Get this assessment by email". Toggles the send form `data-mwp="send"` and focuses `data-mwp="email"`. |
 | `data-mwp="send-go"`, `data-mwp="send-ok"`, `data-f="email"` | *Optional* custom send flow. It isn't on the page as of Sep 2026, where the send form submits natively through Webflow. |

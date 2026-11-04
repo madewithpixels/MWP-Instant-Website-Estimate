@@ -45,7 +45,7 @@
     ],
     resultTypePriority: ['complex', 'brand-led', 'content-led', 'asset-led', 'standard'],
     resultTypes: {
-      standard: { badge: 'Standard build', sub: 'This looks like a focused website project with a clear route forward.' },
+      standard: { badge: 'Standard build', sub: 'A focused project with a clear way forward: good news for both budget and timing.' },
       'content-led': { badge: 'Content-led', sub: 'This looks like a website project where content and messaging will play an important role.' },
       'brand-led': { badge: 'Brand-led', sub: 'This looks like a website project with an opportunity to strengthen the brand at the same time.' },
       'asset-led': { badge: 'Asset-led', sub: 'This looks like a website project where the visual approach will make a big difference.' },
@@ -66,9 +66,11 @@
     },
     bespokeNote: 'Your project includes bespoke functionality, so part of the estimate needs a short discovery conversation before it can be priced accurately.',
     /* Progress label while the booking panel is showing. */
-    bookLabel: 'Book a consultation',
-    stageLabels: ['Your project', 'Your website', 'Your brand', 'Your content', 'Your visual assets', 'Your features', 'Your assessment'],
-    finalGraph: { heading: 'What’s driving your estimate', sub: 'Your estimate reflects the level of design, content, assets and functionality your project is likely to need.' },
+    bookLabel: 'Book a free chat',
+    stageLabels: ['Your project', 'Your website', 'Your brand', 'Your content', 'Your visual assets', 'Your features', 'Your results'],
+    finalGraph: { heading: 'What makes up the cost', sub: 'Each part of your project adds to the range.' },
+    /* Side panel while the questions are being answered. */
+    stageGraph: { heading: 'Your estimate so far', sub: 'Each answer updates the range as you go.' },
   };
   window.MWP_PREFS = Object.assign(DEFAULTS, window.MWP_PREFS || {});
 })();
