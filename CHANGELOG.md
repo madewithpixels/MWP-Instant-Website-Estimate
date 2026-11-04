@@ -1,6 +1,10 @@
 # Changelog
 
-## v3.0.0 — unreleased
+## v3.0.1 — 4 November 2026
+
+Same code as v3.0.0. jsDelivr cached the `@3.0.0` URL while the tag briefly pointed at the wrong commit, so it kept serving v2.0.0 files. Use `@3.0.1`. Do not move or re-create a published tag.
+
+## v3.0.0
 
 **Breaking (markup contract):** new answer ids, a new result screen. The Webflow page must be updated with this release. See `docs/webflow-setup.md`. Specified by Michael Auty on 4 November 2026 (scoping notes: `claude/estimate-v3-scoping-notes.md` in the Claude project).
 
