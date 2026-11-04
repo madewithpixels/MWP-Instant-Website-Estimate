@@ -1,6 +1,6 @@
 # Changelog
 
-## Unreleased
+## v2.0.0 — 2026-11-04
 
 ### Changed — assessment screen copy and advice lines (R-051, R-050; wording approved by Michael 2–3 Nov 2026)
 - **Tighter copy** in `prefs.js`: result lead line ("A focused project with a clear way forward: good news for both budget and timing."), progress label "Your results", result graph heading "What makes up the cost" / "Each part of your project adds to the range.", booking progress label "Book a free chat". New prefs key `stageGraph` ("Your estimate so far" / "Each answer updates the range as you go.") replaces the hard-coded heading during the questions and also sets the sub-line. The content-led, brand-led, asset-led and "more involved" lead lines are rewritten in the same friendly, advice-first voice (drafted by Claude, 4 Nov 2026: Michael to approve).
