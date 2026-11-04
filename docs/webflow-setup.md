@@ -22,7 +22,7 @@ The site's **Head code** (Site settings → Custom code) also has `.iwa-panel .m
 Do it in one go. If the embeds and the CDN bundle are both on the page, the engine binds twice and every click toggles twice.
 
 1. **Tag a release** (see [releasing.md](releasing.md)) and check the files load:
-   `https://cdn.jsdelivr.net/gh/madewithpixels/MWP-Instant-Website-Estimate@v2.0.0/dist/mwp-estimate.min.js`
+   `https://cdn.jsdelivr.net/gh/madewithpixels/mwp-instant-website-estimate@2.0.0/dist/mwp-estimate.min.js`
 2. **If you've changed anything in the live prefs embed** that differs from `src/js/prefs.js`, either commit that change to the repo first or keep it as an override (step 4). As of 21 Sep 2026 the two are identical, apart from the new `startFigure` key, which the engine defaults to 500 anyway.
 3. In the Designer, **delete the eight embeds** listed above. Keep all other elements. The `tips` block, `data-f` hidden inputs, rating blocks and so on are markup, not code.
 4. *(Optional)* Add a page-level override, before the bundle, using [`webflow/prefs-override.html`](../webflow/prefs-override.html).
