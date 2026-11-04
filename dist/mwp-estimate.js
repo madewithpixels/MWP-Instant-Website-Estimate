@@ -53,10 +53,10 @@
     resultTypePriority: ['complex', 'brand-led', 'content-led', 'asset-led', 'standard'],
     resultTypes: {
       standard: { badge: 'Standard build', sub: 'A focused project with a clear way forward: good news for both budget and timing.' },
-      'content-led': { badge: 'Content-led', sub: 'This looks like a website project where content and messaging will play an important role.' },
-      'brand-led': { badge: 'Brand-led', sub: 'This looks like a website project with an opportunity to strengthen the brand at the same time.' },
-      'asset-led': { badge: 'Asset-led', sub: 'This looks like a website project where the visual approach will make a big difference.' },
-      complex: { badge: 'More involved', sub: 'This looks like a more involved digital project and would benefit from a short discovery conversation.' },
+      'content-led': { badge: 'Content-led', sub: 'Your content will do a lot of the work here, and sorting it early is the best way to save time and money.' },
+      'brand-led': { badge: 'Brand-led', sub: 'A chance to strengthen your brand as the site takes shape, so the two work together and nothing is paid for twice.' },
+      'asset-led': { badge: 'Asset-led', sub: 'Strong visuals will make the biggest difference here, so a little planning on imagery goes a long way.' },
+      complex: { badge: 'More involved', sub: 'A more involved project, so a short chat first keeps the price accurate and avoids surprises.' },
     },
     driverCopy: {
       website: 'The size and structure of the site are the main foundation of the estimate.',
