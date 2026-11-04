@@ -39,7 +39,7 @@ Use page overrides for quick tweaks and testing. When a change should stick, upd
 | `resultTypePriority` | `complex, brand-led, content-led, asset-led, standard` | Order in which result types are tested. |
 | `driverCopy.<cat>` | copy | One line per category in the optional `drivers` list on the result screen. Unused while that element isn't on the page. |
 | `summary` | copy | The one-paragraph summary at the top of the result screen: opening phrase per project type, a phrase per size, brand, content, image and feature answer, and the two closing sentences. |
-| `blocks` | copy | The five "Your …" blocks (`website`, `brand`, `content`, `assets`, `func`). `content` has one version per content answer; `func` has two routes (`picked` or `none`). |
+| `blocks` | copy | The five "Your …" blocks (`website`, `brand`, `content`, `assets`, `func`). `content` has one version per content answer; `func` has two routes (`picked` or `none`), and `func.offTheShelf` (`ids` and `text` with a `{features}` placeholder) adds a second paragraph to the picked route when a feature that has an off-the-shelf alternative is chosen. |
 | `improvementNote` | `''` | Optional extra line in "Your website" for people who chose "Improvements to an existing website". Empty = none. |
 | `bespokeNote` | copy | Note shown under the running figure when a consultation feature is selected. |
 | `stageLabels` | 7 labels | "Step n of 6 — label", plus the result label. |

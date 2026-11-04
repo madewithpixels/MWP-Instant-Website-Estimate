@@ -1,6 +1,6 @@
 {
   "name": "mwp-instant-website-estimate",
-  "version": "3.0.1",
+  "version": "3.1.0",
   "private": true,
   "description": "MadewithPixels instant website estimate (Q&A assessment) for Webflow — served via jsDelivr.",
   "license": "UNLICENSED",

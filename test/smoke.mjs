@@ -85,6 +85,8 @@ assert.ok(boxes.every((b) => b.classList.contains('mwp-reco')), 'blocks carry th
 assert.ok(boxes[0].classList.contains('is-website') && boxes[4].classList.contains('is-complex'), 'block colour classes');
 assert.ok(boxes[2].textContent.includes('shaping something rough'), 'content block follows the content answer');
 assert.ok(boxes[4].textContent.includes('firm ideas'), 'functionality block: features picked');
+assert.ok(boxes[4].textContent.includes('The estimate for a booking system allows for a full custom build.'), 'off-the-shelf note names the booking system only (blog is covered by Webflow)');
+assert.ok(boxes[4].textContent.includes('Off-the-shelf tools can often cover this for much less'), 'off-the-shelf note wording');
 assert.ok(R.classList.contains('mwp-result-active'), 'result flag for the dock');
 q('[data-mwp="cta-book"]').click();
 await tick();
@@ -128,5 +130,29 @@ assert.equal(R.querySelectorAll('[data-mwp="tip"]').length, 4, 'tips still there
   assert.ok(bx[2].textContent.includes('starting from scratch'), 'content block for "write it for us"');
   assert.ok(bx[4].textContent.includes('no-pressure, zero-obligation chat'), 'functionality block: no features picked');
   assert.equal(q2('[data-f="result_type"]').value, 'brand-led');
+}
+// Third walk: a blog only (built into Webflow), so no off-the-shelf note.
+{
+  const d3 = new JSDOM(`<!doctype html><body>${readFileSync('test/fixture.html', 'utf8')}</body>`, { runScripts: 'outside-only' });
+  const w3 = d3.window;
+  w3.matchMedia = () => ({ matches: false });
+  w3.HTMLElement.prototype.scrollIntoView = function () {};
+  w3.scrollTo = function () {};
+  w3.eval(readFileSync(process.argv[2] || 'dist/mwp-estimate.js', 'utf8'));
+  if (w3.document.readyState === 'loading') await new Promise((r) => w3.document.addEventListener('DOMContentLoaded', r));
+  const R3 = w3.document.getElementById('mwp-adv');
+  const q3 = (s) => R3.querySelector(s);
+  const pick3 = (stage, id) => q3(`[data-stage="${stage}"] [data-answer-id="${id}"]`).click();
+  const next3 = () => q3('[data-mwp="next"]').click();
+  pick3('project_type', 'new-site'); next3();
+  pick3('website_size', 'small'); next3();
+  pick3('brand_state', 'logo-only'); next3();
+  pick3('content_state', 'everything'); next3();
+  pick3('visual_assets', 'pro'); next3();
+  pick3('features', 'blog');
+  q3('[data-mwp="cta-see"]').click();
+  const fb = [...R3.querySelectorAll('[data-mwp="reco"]')][4].textContent;
+  assert.ok(fb.includes('firm ideas'), 'blog only: picked route');
+  assert.ok(!fb.includes('off-the-shelf') && !fb.includes('Off-the-shelf'), 'blog only: no off-the-shelf note');
 }
 console.log('smoke: all checks passed');

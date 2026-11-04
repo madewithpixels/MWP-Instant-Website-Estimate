@@ -1,5 +1,9 @@
 # Changelog
 
+## v3.1.0 — 4 November 2026
+
+No markup change. "Your functionality" gains a second paragraph when the visitor picks any of advanced forms, a booking system, CRM or email integration, ecommerce, AI or bespoke functionality: the estimate allows for a full custom build, and off-the-shelf tools can often cover it for much less. It names the features they picked. Features built into Webflow (blog, portfolio, services, downloads, events, testimonials, team) and the social media campaign don't trigger it. Copy and the feature list are `blocks.func.offTheShelf` in prefs.
+
 ## v3.0.1 — 4 November 2026
 
 Same code as v3.0.0. jsDelivr cached the `@3.0.0` URL while the tag briefly pointed at the wrong commit, so it kept serving v2.0.0 files. Use `@3.0.1`. Do not move or re-create a published tag.

@@ -116,6 +116,12 @@
         h: 'Your functionality',
         picked: ['You seem to have firm ideas for the type of features your site needs. That’s a great starting point and it makes an accurate estimate easier to reach.'],
         none: ['We can help you to decide what type of website features would suit your business. Get in touch for a no-pressure, zero-obligation chat.'],
+        /* Added to the picked route when any of these features is chosen. {features} becomes their names
+           (from summary.features). The estimate covers a full build; off-the-shelf tools can cost far less. */
+        offTheShelf: {
+          ids: ['adv-forms', 'booking', 'crm', 'ecom', 'ai', 'bespoke'],
+          text: 'The estimate for {features} allows for a full custom build. Off-the-shelf tools can often cover this for much less, and we’d happily talk through whether that suits you.',
+        },
       },
     },
     /* Optional extra line in "Your website" for people who chose "Improvements to an existing website"
