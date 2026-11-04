@@ -30,12 +30,13 @@
       { key: 'assets', label: 'Visual Assets' },
       { key: 'func', label: 'Functionality' },
     ],
+    /* Content cost by site size. "some" = content exists, we need help refining it;
+       "help" = we need help writing it. "everything" costs nothing. */
     contentMatrix: {
-      single: { everything: [0, 0], most: [150, 250], some: [250, 350], help: [350, 500] },
-      small: { everything: [0, 0], most: [250, 400], some: [400, 650], help: [500, 800] },
-      medium: { everything: [0, 0], most: [400, 650], some: [650, 900], help: [700, 1050] },
-      large: { everything: [0, 0], most: [650, 900], some: [900, 1300], help: [1050, 1800] },
-      notsure: { everything: [0, 0], most: [250, 400], some: [400, 650], help: [500, 800] },
+      small: { everything: [0, 0], some: [150, 350], help: [350, 700] },
+      medium: { everything: [0, 0], some: [350, 500], help: [500, 1000] },
+      large: { everything: [0, 0], some: [500, 1000], help: [750, 1500] },
+      notsure: { everything: [0, 0], some: [150, 350], help: [350, 700] },
     },
     cmsBands: [
       { upTo: 1, range: [0, 250] },
@@ -44,13 +45,6 @@
       { upTo: 99, range: [750, 1250] },
     ],
     resultTypePriority: ['complex', 'brand-led', 'content-led', 'asset-led', 'standard'],
-    resultTypes: {
-      standard: { badge: 'Standard build', sub: 'A focused project with a clear way forward: good news for both budget and timing.' },
-      'content-led': { badge: 'Content-led', sub: 'Your content will do a lot of the work here, and sorting it early is the best way to save time and money.' },
-      'brand-led': { badge: 'Brand-led', sub: 'A chance to strengthen your brand as the site takes shape, so the two work together and nothing is paid for twice.' },
-      'asset-led': { badge: 'Asset-led', sub: 'Strong visuals will make the biggest difference here, so a little planning on imagery goes a long way.' },
-      complex: { badge: 'More involved', sub: 'A more involved project, so a short chat first keeps the price accurate and avoids surprises.' },
-    },
     driverCopy: {
       website: 'The size and structure of the site are the main foundation of the estimate.',
       brand: 'There’s an opportunity to build a more coherent visual identity as part of the project.',
@@ -58,19 +52,82 @@
       assets: 'The project may benefit from creating or sourcing stronger imagery.',
       func: 'Additional forms, ecommerce or integrations can increase scope.',
     },
-    recommendations: {
-      brand: { h: 'Your brand', p: 'Your brand has enough of a starting point to begin the conversation. We can refine the visual language as part of the website so everything feels more coherent.' },
-      content: { h: 'Your content', p: 'If the content isn’t fully written yet, that’s fine. We can help structure the pages and develop the messaging alongside the design.' },
-      assets: { h: 'Your visual assets', p: 'If you don’t have strong imagery yet, we can help create a visual approach using the best mix of photography, stock, illustration or AI-generated visuals.' },
-      complex: { h: 'Your bespoke functionality', p: 'Because your project includes more advanced functionality, the best next step is a short discovery call so we can understand the details before pricing that part properly.' },
+    /* The summary paragraph at the top of the result screen is built from the answers:
+       "<project> (<size>), with <brand>, <content> and <images>, plus <features>. <close>" */
+    summary: {
+      project: {
+        'new-site': 'You’re planning a new website',
+        redesign: 'You’re planning a redesign of your existing website',
+        improvement: 'You’re planning improvements to your existing website',
+        'wider-support': 'You’re looking for help building integrated business tools',
+        fallback: 'You’re planning a website',
+      },
+      size: { small: 'up to five pages', medium: 'around five to fifteen pages', large: 'fifteen pages or more' },
+      brand: { established: 'brand guidelines already in place', 'logo-only': 'a logo already in place', 'brand-help': 'brand work still to do' },
+      content: { everything: 'content written and approved', some: 'content that needs shaping', help: 'content still to be written' },
+      assets: { pro: 'strong imagery', 'some-imagery': 'some existing imagery', little: 'little imagery so far' },
+      features: {
+        blog: 'a blog',
+        portfolio: 'a portfolio',
+        services: 'service pages',
+        downloads: 'downloads',
+        events: 'events',
+        testimonials: 'testimonials',
+        team: 'team profiles',
+        'adv-forms': 'advanced forms',
+        booking: 'a booking system',
+        crm: 'CRM or email integration',
+        ecom: 'an online shop',
+        ai: 'AI features',
+        bespoke: 'bespoke functionality',
+        social: 'a social media campaign',
+      },
+      closeStandard: 'It’s a clear brief and a sensible place to start.',
+      closeBespoke: 'Because it includes some bespoke functionality, a short chat will help us price that part properly.',
     },
+    /* The five "Your …" blocks on the result screen. Each paragraph is one <p>.
+       content has one version per content answer; func has two routes (features picked or not). */
+    blocks: {
+      website: {
+        h: 'Your website',
+        p: [
+          'The size of your site will largely be driven by how much content you have or need and the features your site requires.',
+          'There’s likely to be room for manoeuvre with the cost we’ve estimated here. A quick phone call would clear it up.',
+        ],
+      },
+      brand: {
+        h: 'Your brand',
+        p: ['We can help you to design your brand from scratch or support you in developing your brand further, whatever your requirements. We have a long history of helping businesses and charities extend the reach of their brand.'],
+      },
+      content: {
+        h: 'Your content',
+        everything: ['If you have content already written and approved for use that will save you time and money.'],
+        some: ['If you need help shaping something rough into its final shape, we have lots of experience in doing that.'],
+        help: ['If you’re starting from scratch, we often just need some bullet points to begin crafting professionally written content.'],
+      },
+      assets: {
+        h: 'Your images',
+        p: [
+          'Lack of imagery is often a sticking point for many clients and projects. We have lots of experience at solving that problem.',
+          'Whether it’s sourcing stock imagery, creating new images with generative AI, retouching your existing photographs or finding a more abstract and typographic approach that suits your brand, there are lots of options.',
+        ],
+      },
+      func: {
+        h: 'Your functionality',
+        picked: ['You seem to have firm ideas for the type of features your site needs. That’s a great starting point and it makes an accurate estimate easier to reach.'],
+        none: ['We can help you to decide what type of website features would suit your business. Get in touch for a no-pressure, zero-obligation chat.'],
+      },
+    },
+    /* Optional extra line in "Your website" for people who chose "Improvements to an existing website"
+       (empty = none). Webflow sites are the speciality, so wording to be decided. */
+    improvementNote: '',
     bespokeNote: 'Your project includes bespoke functionality, so part of the estimate needs a short discovery conversation before it can be priced accurately.',
     /* Progress label while the booking panel is showing. */
     bookLabel: 'Book a free chat',
     stageLabels: ['Your project', 'Your website', 'Your brand', 'Your content', 'Your visual assets', 'Your features', 'Your results'],
     finalGraph: { heading: 'What makes up the cost', sub: 'Each part of your project adds to the range.' },
     /* Side panel while the questions are being answered. */
-    stageGraph: { heading: 'Your estimate so far', sub: 'Each answer updates the range as you go.' },
+    stageGraph: { heading: 'Your estimate so far', sub: 'Answer the questions, the price updates as you go' },
   };
   window.MWP_PREFS = Object.assign(DEFAULTS, window.MWP_PREFS || {});
 })();

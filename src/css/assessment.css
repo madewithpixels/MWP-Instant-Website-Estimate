@@ -102,3 +102,6 @@
 @media (prefers-reduced-motion: reduce) {
   #mwp-adv [data-fill] { transition: none; }
 }
+
+/* Result screen: the Website block. Webflow styles the other four (is-brand, is-content, is-assets, is-complex). */
+#mwp-adv .mwp-reco.is-website { border-left: 5px solid var(--teal); }

@@ -424,14 +424,39 @@
       if (e && e.preventDefault) e.preventDefault();
       back();
     });
-  function shapingText(r) {
-    var size = sel.website_size && sel.website_size !== 'notsure' ? optData('website_size', sel.website_size).label.toLowerCase() : 'website';
-    var bits = [];
-    if (sel.content_state === 'some' || sel.content_state === 'help') bits.push('content');
-    if (sel.visual_assets === 'phone' || sel.visual_assets === 'little') bits.push('visual assets');
-    if (sel.brand_state === 'brand-help' || sel.brand_state === 'logo-only') bits.push('brand');
-    var support = bits.length ? ', with some support needed around ' + bits.join(' and ') : '';
-    return 'From your answers, a ' + size + ' looks like the right fit' + support + '. It’s a sensible place to start, and it can still look polished and do real work for you.';
+  function listJoin(a) {
+    return a.length < 2 ? a.join('') : a.slice(0, -1).join(', ') + ' and ' + a[a.length - 1];
+  }
+  /* One paragraph that sums up the answers: "<project> (<size>), with <brand>, <content> and
+     <images>, plus <features>. <close>". Wording lives in P.summary. */
+  function summaryText(r) {
+    var S = P.summary,
+      pt = sel.project_type,
+      out = S.project[pt] || S.project.fallback,
+      size = pt === 'wider-support' ? '' : S.size[sel.website_size];
+    if (size) out += ' (' + size + ')';
+    var parts = [S.brand[sel.brand_state], S.content[sel.content_state], S.assets[sel.visual_assets]].filter(Boolean);
+    if (parts.length) out += ', with ' + listJoin(parts);
+    var feats = (sel.features || []).map(function (id) {
+      return S.features[id] || optData('features', id).label.toLowerCase();
+    });
+    if (feats.length) out += ', plus ' + listJoin(feats);
+    return out + '. ' + (r.consult ? S.closeBespoke : S.closeStandard);
+  }
+  /* The five "Your …" blocks. Each takes the class of a Webflow combo that already exists
+     (is-brand, is-content, is-assets, is-complex) except Website, which the tool styles itself. */
+  var BLOCK_CLASS = { website: 'is-website', brand: 'is-brand', content: 'is-content', assets: 'is-assets', func: 'is-complex' };
+  function blocks() {
+    var B = P.blocks,
+      web = B.website.p.slice();
+    if (sel.project_type === 'improvement' && P.improvementNote) web.push(P.improvementNote);
+    return [
+      ['website', B.website.h, web],
+      ['brand', B.brand.h, B.brand.p],
+      ['content', B.content.h, B.content[sel.content_state] || B.content.some],
+      ['assets', B.assets.h, B.assets.p],
+      ['func', B.func.h, (sel.features || []).length ? B.func.picked : B.func.none],
+    ];
   }
   /* v = 'result' (See assessment) or 'book' (Book a consultation). Both fill the
      result panel, so switching between them later needs no recompute. */
@@ -451,11 +476,7 @@
     });
     if (progEl) progEl.setAttribute('aria-valuenow', STAGES.length + 1);
     T('[data-mwp="stage-label"]', v === 'book' ? P.bookLabel || 'Book a consultation' : P.stageLabels[STAGES.length]);
-    T('[data-mwp="result-type"]', P.resultTypes[type].badge);
-    var _rt = $('[data-mwp="result-type"]');
-    if (_rt) _rt.setAttribute('data-type', type);
-    T('[data-mwp="result-sub"]', P.resultTypes[type].sub);
-    T('[data-mwp="shaping"]', shapingText(r));
+    T('[data-mwp="shaping"]', summaryText(r));
     T('[data-mwp="big-est"]', range(r.roundedMin, r.roundedMax) + (r.consult ? ' + bespoke functionality to be scoped' : ''));
     committed = r;
     paint(r, false);
@@ -477,16 +498,13 @@
     var rc = $('[data-mwp="recos"]');
     if (rc) {
       rc.innerHTML = '';
-      var keys = [];
-      if (sel.brand_state === 'logo-only' || sel.brand_state === 'logo-assets' || sel.brand_state === 'brand-help') keys.push('brand');
-      if (sel.content_state === 'some' || sel.content_state === 'help') keys.push('content');
-      if (sel.visual_assets === 'phone' || sel.visual_assets === 'little' || sel.visual_assets === 'assets-notsure') keys.push('assets');
-      if (r.consult) keys.push('complex');
-      keys.forEach(function (k) {
+      blocks().forEach(function (b) {
         var box = document.createElement('div');
         box.setAttribute('data-mwp', 'reco');
-        box.className = 'mwp-reco is-' + k;
-        box.innerHTML = '<h4 class="mwp-reco-h">' + P.recommendations[k].h + '</h4><p class="mwp-reco-p">' + P.recommendations[k].p + '</p>';
+        box.className = 'mwp-reco ' + BLOCK_CLASS[b[0]];
+        box.innerHTML = '<h4 class="mwp-reco-h">' + b[1] + '</h4>' + b[2].map(function (t) {
+          return '<p class="mwp-reco-p">' + t + '</p>';
+        }).join('');
         rc.appendChild(box);
       });
     }
@@ -538,8 +556,8 @@
     set('estimate_max', r.roundedMax);
     set('result_type', type);
     set('complexity_tags', r.tags.join(', '));
-    var sub = $('[data-mwp="result-sub"]');
-    set('recommendation', sub ? sub.textContent : '');
+    var sum = $('[data-mwp="shaping"]');
+    set('recommendation', sum ? sum.textContent : '');
   }
   var ctaSend = $('[data-mwp="cta-send"]');
   if (ctaSend)

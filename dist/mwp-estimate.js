@@ -1,8 +1,8 @@
-/*! MWP Instant Website Estimate v2.0.0 | madewithpixels.co.uk | github.com/madewithpixels/MWP-Instant-Website-Estimate */
+/*! MWP Instant Website Estimate v3.0.0 | madewithpixels.co.uk | github.com/madewithpixels/MWP-Instant-Website-Estimate */
 (function () {
   'use strict';
   if (window.__MWP_ESTIMATE_LOADED__) return;
-  window.__MWP_ESTIMATE_LOADED__ = '2.0.0';
+  window.__MWP_ESTIMATE_LOADED__ = '3.0.0';
   function run() {
 /* ---- prefs.js ---- */
 /* MWP Assessment — default SETTINGS.
@@ -37,12 +37,13 @@
       { key: 'assets', label: 'Visual Assets' },
       { key: 'func', label: 'Functionality' },
     ],
+    /* Content cost by site size. "some" = content exists, we need help refining it;
+       "help" = we need help writing it. "everything" costs nothing. */
     contentMatrix: {
-      single: { everything: [0, 0], most: [150, 250], some: [250, 350], help: [350, 500] },
-      small: { everything: [0, 0], most: [250, 400], some: [400, 650], help: [500, 800] },
-      medium: { everything: [0, 0], most: [400, 650], some: [650, 900], help: [700, 1050] },
-      large: { everything: [0, 0], most: [650, 900], some: [900, 1300], help: [1050, 1800] },
-      notsure: { everything: [0, 0], most: [250, 400], some: [400, 650], help: [500, 800] },
+      small: { everything: [0, 0], some: [150, 350], help: [350, 700] },
+      medium: { everything: [0, 0], some: [350, 500], help: [500, 1000] },
+      large: { everything: [0, 0], some: [500, 1000], help: [750, 1500] },
+      notsure: { everything: [0, 0], some: [150, 350], help: [350, 700] },
     },
     cmsBands: [
       { upTo: 1, range: [0, 250] },
@@ -51,13 +52,6 @@
       { upTo: 99, range: [750, 1250] },
     ],
     resultTypePriority: ['complex', 'brand-led', 'content-led', 'asset-led', 'standard'],
-    resultTypes: {
-      standard: { badge: 'Standard build', sub: 'A focused project with a clear way forward: good news for both budget and timing.' },
-      'content-led': { badge: 'Content-led', sub: 'Your content will do a lot of the work here, and sorting it early is the best way to save time and money.' },
-      'brand-led': { badge: 'Brand-led', sub: 'A chance to strengthen your brand as the site takes shape, so the two work together and nothing is paid for twice.' },
-      'asset-led': { badge: 'Asset-led', sub: 'Strong visuals will make the biggest difference here, so a little planning on imagery goes a long way.' },
-      complex: { badge: 'More involved', sub: 'A more involved project, so a short chat first keeps the price accurate and avoids surprises.' },
-    },
     driverCopy: {
       website: 'The size and structure of the site are the main foundation of the estimate.',
       brand: 'There’s an opportunity to build a more coherent visual identity as part of the project.',
@@ -65,19 +59,82 @@
       assets: 'The project may benefit from creating or sourcing stronger imagery.',
       func: 'Additional forms, ecommerce or integrations can increase scope.',
     },
-    recommendations: {
-      brand: { h: 'Your brand', p: 'Your brand has enough of a starting point to begin the conversation. We can refine the visual language as part of the website so everything feels more coherent.' },
-      content: { h: 'Your content', p: 'If the content isn’t fully written yet, that’s fine. We can help structure the pages and develop the messaging alongside the design.' },
-      assets: { h: 'Your visual assets', p: 'If you don’t have strong imagery yet, we can help create a visual approach using the best mix of photography, stock, illustration or AI-generated visuals.' },
-      complex: { h: 'Your bespoke functionality', p: 'Because your project includes more advanced functionality, the best next step is a short discovery call so we can understand the details before pricing that part properly.' },
+    /* The summary paragraph at the top of the result screen is built from the answers:
+       "<project> (<size>), with <brand>, <content> and <images>, plus <features>. <close>" */
+    summary: {
+      project: {
+        'new-site': 'You’re planning a new website',
+        redesign: 'You’re planning a redesign of your existing website',
+        improvement: 'You’re planning improvements to your existing website',
+        'wider-support': 'You’re looking for help building integrated business tools',
+        fallback: 'You’re planning a website',
+      },
+      size: { small: 'up to five pages', medium: 'around five to fifteen pages', large: 'fifteen pages or more' },
+      brand: { established: 'brand guidelines already in place', 'logo-only': 'a logo already in place', 'brand-help': 'brand work still to do' },
+      content: { everything: 'content written and approved', some: 'content that needs shaping', help: 'content still to be written' },
+      assets: { pro: 'strong imagery', 'some-imagery': 'some existing imagery', little: 'little imagery so far' },
+      features: {
+        blog: 'a blog',
+        portfolio: 'a portfolio',
+        services: 'service pages',
+        downloads: 'downloads',
+        events: 'events',
+        testimonials: 'testimonials',
+        team: 'team profiles',
+        'adv-forms': 'advanced forms',
+        booking: 'a booking system',
+        crm: 'CRM or email integration',
+        ecom: 'an online shop',
+        ai: 'AI features',
+        bespoke: 'bespoke functionality',
+        social: 'a social media campaign',
+      },
+      closeStandard: 'It’s a clear brief and a sensible place to start.',
+      closeBespoke: 'Because it includes some bespoke functionality, a short chat will help us price that part properly.',
     },
+    /* The five "Your …" blocks on the result screen. Each paragraph is one <p>.
+       content has one version per content answer; func has two routes (features picked or not). */
+    blocks: {
+      website: {
+        h: 'Your website',
+        p: [
+          'The size of your site will largely be driven by how much content you have or need and the features your site requires.',
+          'There’s likely to be room for manoeuvre with the cost we’ve estimated here. A quick phone call would clear it up.',
+        ],
+      },
+      brand: {
+        h: 'Your brand',
+        p: ['We can help you to design your brand from scratch or support you in developing your brand further, whatever your requirements. We have a long history of helping businesses and charities extend the reach of their brand.'],
+      },
+      content: {
+        h: 'Your content',
+        everything: ['If you have content already written and approved for use that will save you time and money.'],
+        some: ['If you need help shaping something rough into its final shape, we have lots of experience in doing that.'],
+        help: ['If you’re starting from scratch, we often just need some bullet points to begin crafting professionally written content.'],
+      },
+      assets: {
+        h: 'Your images',
+        p: [
+          'Lack of imagery is often a sticking point for many clients and projects. We have lots of experience at solving that problem.',
+          'Whether it’s sourcing stock imagery, creating new images with generative AI, retouching your existing photographs or finding a more abstract and typographic approach that suits your brand, there are lots of options.',
+        ],
+      },
+      func: {
+        h: 'Your functionality',
+        picked: ['You seem to have firm ideas for the type of features your site needs. That’s a great starting point and it makes an accurate estimate easier to reach.'],
+        none: ['We can help you to decide what type of website features would suit your business. Get in touch for a no-pressure, zero-obligation chat.'],
+      },
+    },
+    /* Optional extra line in "Your website" for people who chose "Improvements to an existing website"
+       (empty = none). Webflow sites are the speciality, so wording to be decided. */
+    improvementNote: '',
     bespokeNote: 'Your project includes bespoke functionality, so part of the estimate needs a short discovery conversation before it can be priced accurately.',
     /* Progress label while the booking panel is showing. */
     bookLabel: 'Book a free chat',
     stageLabels: ['Your project', 'Your website', 'Your brand', 'Your content', 'Your visual assets', 'Your features', 'Your results'],
     finalGraph: { heading: 'What makes up the cost', sub: 'Each part of your project adds to the range.' },
     /* Side panel while the questions are being answered. */
-    stageGraph: { heading: 'Your estimate so far', sub: 'Each answer updates the range as you go.' },
+    stageGraph: { heading: 'Your estimate so far', sub: 'Answer the questions, the price updates as you go' },
   };
   window.MWP_PREFS = Object.assign(DEFAULTS, window.MWP_PREFS || {});
 })();
@@ -509,14 +566,39 @@
       if (e && e.preventDefault) e.preventDefault();
       back();
     });
-  function shapingText(r) {
-    var size = sel.website_size && sel.website_size !== 'notsure' ? optData('website_size', sel.website_size).label.toLowerCase() : 'website';
-    var bits = [];
-    if (sel.content_state === 'some' || sel.content_state === 'help') bits.push('content');
-    if (sel.visual_assets === 'phone' || sel.visual_assets === 'little') bits.push('visual assets');
-    if (sel.brand_state === 'brand-help' || sel.brand_state === 'logo-only') bits.push('brand');
-    var support = bits.length ? ', with some support needed around ' + bits.join(' and ') : '';
-    return 'From your answers, a ' + size + ' looks like the right fit' + support + '. It’s a sensible place to start, and it can still look polished and do real work for you.';
+  function listJoin(a) {
+    return a.length < 2 ? a.join('') : a.slice(0, -1).join(', ') + ' and ' + a[a.length - 1];
+  }
+  /* One paragraph that sums up the answers: "<project> (<size>), with <brand>, <content> and
+     <images>, plus <features>. <close>". Wording lives in P.summary. */
+  function summaryText(r) {
+    var S = P.summary,
+      pt = sel.project_type,
+      out = S.project[pt] || S.project.fallback,
+      size = pt === 'wider-support' ? '' : S.size[sel.website_size];
+    if (size) out += ' (' + size + ')';
+    var parts = [S.brand[sel.brand_state], S.content[sel.content_state], S.assets[sel.visual_assets]].filter(Boolean);
+    if (parts.length) out += ', with ' + listJoin(parts);
+    var feats = (sel.features || []).map(function (id) {
+      return S.features[id] || optData('features', id).label.toLowerCase();
+    });
+    if (feats.length) out += ', plus ' + listJoin(feats);
+    return out + '. ' + (r.consult ? S.closeBespoke : S.closeStandard);
+  }
+  /* The five "Your …" blocks. Each takes the class of a Webflow combo that already exists
+     (is-brand, is-content, is-assets, is-complex) except Website, which the tool styles itself. */
+  var BLOCK_CLASS = { website: 'is-website', brand: 'is-brand', content: 'is-content', assets: 'is-assets', func: 'is-complex' };
+  function blocks() {
+    var B = P.blocks,
+      web = B.website.p.slice();
+    if (sel.project_type === 'improvement' && P.improvementNote) web.push(P.improvementNote);
+    return [
+      ['website', B.website.h, web],
+      ['brand', B.brand.h, B.brand.p],
+      ['content', B.content.h, B.content[sel.content_state] || B.content.some],
+      ['assets', B.assets.h, B.assets.p],
+      ['func', B.func.h, (sel.features || []).length ? B.func.picked : B.func.none],
+    ];
   }
   /* v = 'result' (See assessment) or 'book' (Book a consultation). Both fill the
      result panel, so switching between them later needs no recompute. */
@@ -536,11 +618,7 @@
     });
     if (progEl) progEl.setAttribute('aria-valuenow', STAGES.length + 1);
     T('[data-mwp="stage-label"]', v === 'book' ? P.bookLabel || 'Book a consultation' : P.stageLabels[STAGES.length]);
-    T('[data-mwp="result-type"]', P.resultTypes[type].badge);
-    var _rt = $('[data-mwp="result-type"]');
-    if (_rt) _rt.setAttribute('data-type', type);
-    T('[data-mwp="result-sub"]', P.resultTypes[type].sub);
-    T('[data-mwp="shaping"]', shapingText(r));
+    T('[data-mwp="shaping"]', summaryText(r));
     T('[data-mwp="big-est"]', range(r.roundedMin, r.roundedMax) + (r.consult ? ' + bespoke functionality to be scoped' : ''));
     committed = r;
     paint(r, false);
@@ -562,16 +640,13 @@
     var rc = $('[data-mwp="recos"]');
     if (rc) {
       rc.innerHTML = '';
-      var keys = [];
-      if (sel.brand_state === 'logo-only' || sel.brand_state === 'logo-assets' || sel.brand_state === 'brand-help') keys.push('brand');
-      if (sel.content_state === 'some' || sel.content_state === 'help') keys.push('content');
-      if (sel.visual_assets === 'phone' || sel.visual_assets === 'little' || sel.visual_assets === 'assets-notsure') keys.push('assets');
-      if (r.consult) keys.push('complex');
-      keys.forEach(function (k) {
+      blocks().forEach(function (b) {
         var box = document.createElement('div');
         box.setAttribute('data-mwp', 'reco');
-        box.className = 'mwp-reco is-' + k;
-        box.innerHTML = '<h4 class="mwp-reco-h">' + P.recommendations[k].h + '</h4><p class="mwp-reco-p">' + P.recommendations[k].p + '</p>';
+        box.className = 'mwp-reco ' + BLOCK_CLASS[b[0]];
+        box.innerHTML = '<h4 class="mwp-reco-h">' + b[1] + '</h4>' + b[2].map(function (t) {
+          return '<p class="mwp-reco-p">' + t + '</p>';
+        }).join('');
         rc.appendChild(box);
       });
     }
@@ -623,8 +698,8 @@
     set('estimate_max', r.roundedMax);
     set('result_type', type);
     set('complexity_tags', r.tags.join(', '));
-    var sub = $('[data-mwp="result-sub"]');
-    set('recommendation', sub ? sub.textContent : '');
+    var sum = $('[data-mwp="shaping"]');
+    set('recommendation', sum ? sum.textContent : '');
   }
   var ctaSend = $('[data-mwp="cta-send"]');
   if (ctaSend)
@@ -727,11 +802,11 @@
   if (!box || !list || !res) return;
   var TIPS = [
     {
-      when: function (a) { return /^(most|some|help)$/.test(a.content_state); },
+      when: function (a) { return /^(some|help)$/.test(a.content_state); },
       text: 'Supplying final, approved copy before design starts is the single biggest saving. It removes rewriting and extra rounds.',
     },
     {
-      when: function (a) { return /^(phone|little)$/.test(a.visual_assets); },
+      when: function (a) { return /^little$/.test(a.visual_assets); },
       text: 'Good photos of your team, premises or products, even from a recent phone, cut down on stock or custom imagery.',
     },
     {
@@ -761,123 +836,6 @@
       p.className = 'iwa-fine-print';
       p.setAttribute('data-mwp', 'tip');
       p.textContent = t.text;
-      list.appendChild(p);
-    });
-    box.hidden = !list.children.length;
-  }
-  if (window.MutationObserver) new MutationObserver(render).observe(res, { attributes: true, attributeFilter: ['data-active'] });
-  render();
-})();
-
-/* ---- advice.js ---- */
-/* MWP Assessment — one short advice line per answer on the result screen.
- * Reads the answers the engine syncs into the hidden [data-f] fields and fills
- * [data-mwp="advice-list"] (inside the optional [data-mwp="advice"] block).
- * Edit the copy in ADVICE below; the keys are the data-answer-id values on the
- * options in Webflow. Lines render as <p class="iwa-fine-print" data-mwp="advice-line">.
- * Approved wording: Michael, 3 November 2026 (R-051, R-050).
- */
-(function () {
-  'use strict';
-  var root = document.getElementById('mwp-adv');
-  if (!root) return;
-  var box = root.querySelector('[data-mwp="advice"]'),
-    list = root.querySelector('[data-mwp="advice-list"]'),
-    res = root.querySelector('[data-mwp="result"]');
-  if (!box || !list || !res) return;
-  /* Most lines shown in total, so the screen stays short. When there are more,
-     the "not sure" lines go first, then the last ones. */
-  var MAX_LINES = 6;
-  /* At most this many feature lines (question 6), in the order listed below. */
-  var MAX_FEATURE_LINES = 3;
-  var ADVICE = {
-    project_type: {
-      'new-site': 'A fresh start gives us room to get the structure right first time, which saves rework later.',
-      redesign: 'We’ll keep what already works, such as good content and search rankings, so you only pay to change what needs it.',
-      improvement: 'Targeted updates are the quickest, most affordable route. Starting small is often the smartest move.',
-      'wider-support': 'Planning the brand, site and marketing together avoids paying twice for the same thinking.',
-      unsure: 'No problem. A short chat usually makes the best starting point clear.',
-    },
-    website_size: {
-      single: 'Quick to build and easy to keep within budget, and it can still do real work for you.',
-      small: 'A sensible size for most service businesses. Every page you add adds time, so keep to the pages that earn their place.',
-      medium: 'More pages means more content to prepare, so getting that ready early is the biggest time saver.',
-      large: 'Building it in phases keeps the first launch faster and spreads the cost.',
-      notsure: 'We’ve estimated cautiously. Once we know the pages you need, the range usually narrows.',
-    },
-    brand_state: {
-      established: 'Having this ready is a real time and cost saver: we can start designing straight away.',
-      'logo-assets': 'A good starting point. A short list of your colours and fonts will save us time.',
-      'logo-only': 'We’ll build the visual style around your logo as part of the design, which adds a little time.',
-      'brand-help': 'Doing the brand and site together keeps them consistent and is usually better value than separate projects.',
-    },
-    content_state: {
-      everything: 'Having your content ready is one of the biggest time savers.',
-      most: 'Nearly there. Finishing the gaps before design starts keeps the project on schedule.',
-      some: 'Agreeing the page structure early lets us shape the rest of the words around it.',
-      help: 'We can write it with you. Sending rough notes or bullet points first saves time.',
-    },
-    visual_assets: {
-      pro: 'Strong images lift a site more than anything else, and they cost you nothing extra here.',
-      'some-imagery': 'We’ll make the most of what you have. Sending it all early helps us see what’s missing.',
-      phone: 'Good phone photos can work well with careful use. Send your best ones and we’ll tell you where new ones would help.',
-      little: 'A small photo shoot or well-chosen stock can fill the gaps affordably.',
-      'assets-notsure': 'Send us what you’ve got and we’ll recommend the simplest route.',
-    },
-    /* Question 6: shown for the first MAX_FEATURE_LINES picked, in this order. */
-    features: [
-      ['blog', 'A short list of starter articles makes the launch stronger. You can add more later.'],
-      ['portfolio', 'A few strong case studies beat a long list.'],
-      ['services', 'Clear, separate pages for each service help visitors and search engines.'],
-      ['downloads', 'Keep to the few files people ask for most.'],
-      ['events', 'Plan how events will be kept up to date, as old dates quickly look stale.'],
-      ['testimonials', 'Real quotes with names and faces are the most convincing.'],
-      ['team', 'Good photos of your team matter more than long biographies.'],
-      ['adv-forms', 'Simple forms get more replies. Only ask for what you need.'],
-      ['booking', 'Worth planning carefully, as it often connects to other tools and adds cost.'],
-      ['crm', 'Tell us which tools you use now so we can connect to them rather than replace them.'],
-      ['ecom', 'Starting with a small product range keeps the first version quick and affordable.'],
-      ['ai', 'A clear, single purpose keeps this affordable. We can start small and build on it.'],
-      ['bespoke', 'This is where cost grows fastest. A first phase with just the essentials keeps it in control.'],
-    ],
-  };
-  /* Answers whose line is the first to go when there are too many. */
-  var DROP_FIRST = { unsure: 1, notsure: 1, 'assets-notsure': 1 };
-  var STAGE_ORDER = ['project_type', 'website_size', 'brand_state', 'content_state', 'visual_assets'];
-  function val(k) {
-    var el = root.querySelector('[data-f="' + k + '"]');
-    return el ? (el.value || '').trim() : '';
-  }
-  function lines() {
-    var out = [];
-    STAGE_ORDER.forEach(function (k) {
-      var id = val(k),
-        text = id && ADVICE[k][id];
-      if (text) out.push({ text: text, soft: !!DROP_FIRST[id] });
-    });
-    var picked = val('features')
-      .split(',')
-      .map(function (s) {
-        return s.trim();
-      })
-      .filter(Boolean);
-    var n = 0;
-    ADVICE.features.forEach(function (f) {
-      if (n >= MAX_FEATURE_LINES || picked.indexOf(f[0]) < 0) return;
-      out.push({ text: f[1], soft: false });
-      n++;
-    });
-    for (var i = out.length - 1; i >= 0 && out.length > MAX_LINES; i--) if (out[i].soft) out.splice(i, 1);
-    return out.slice(0, MAX_LINES);
-  }
-  function render() {
-    if (res.getAttribute('data-active') !== 'true') return;
-    list.innerHTML = '';
-    lines().forEach(function (l) {
-      var p = document.createElement('p');
-      p.className = 'iwa-fine-print';
-      p.setAttribute('data-mwp', 'advice-line');
-      p.textContent = l.text;
       list.appendChild(p);
     });
     box.hidden = !list.children.length;
