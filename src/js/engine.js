@@ -455,8 +455,26 @@
       ['brand', B.brand.h, B.brand.p],
       ['content', B.content.h, B.content[sel.content_state] || B.content.some],
       ['assets', B.assets.h, B.assets.p],
-      ['func', B.func.h, (sel.features || []).length ? B.func.picked : B.func.none],
+      ['func', B.func.h, funcParas()],
     ];
+  }
+  /* Functionality paragraphs: the picked or none route, plus the off-the-shelf note when any
+     feature that has an off-the-shelf alternative is chosen. */
+  function funcParas() {
+    var B = P.blocks.func,
+      picked = sel.features || [];
+    if (!picked.length) return B.none;
+    var ots = B.offTheShelf,
+      hit = ots
+        ? picked.filter(function (id) {
+            return ots.ids.indexOf(id) > -1;
+          })
+        : [];
+    if (!hit.length) return B.picked;
+    var names = hit.map(function (id) {
+      return P.summary.features[id] || optData('features', id).label.toLowerCase();
+    });
+    return B.picked.concat(ots.text.replace('{features}', listJoin(names)));
   }
   /* v = 'result' (See assessment) or 'book' (Book a consultation). Both fill the
      result panel, so switching between them later needs no recompute. */

@@ -1,8 +1,8 @@
-/*! MWP Instant Website Estimate v3.0.1 | madewithpixels.co.uk | github.com/madewithpixels/MWP-Instant-Website-Estimate */
+/*! MWP Instant Website Estimate v3.1.0 | madewithpixels.co.uk | github.com/madewithpixels/MWP-Instant-Website-Estimate */
 (function () {
   'use strict';
   if (window.__MWP_ESTIMATE_LOADED__) return;
-  window.__MWP_ESTIMATE_LOADED__ = '3.0.1';
+  window.__MWP_ESTIMATE_LOADED__ = '3.1.0';
   function run() {
 /* ---- prefs.js ---- */
 /* MWP Assessment — default SETTINGS.
@@ -123,6 +123,12 @@
         h: 'Your functionality',
         picked: ['You seem to have firm ideas for the type of features your site needs. That’s a great starting point and it makes an accurate estimate easier to reach.'],
         none: ['We can help you to decide what type of website features would suit your business. Get in touch for a no-pressure, zero-obligation chat.'],
+        /* Added to the picked route when any of these features is chosen. {features} becomes their names
+           (from summary.features). The estimate covers a full build; off-the-shelf tools can cost far less. */
+        offTheShelf: {
+          ids: ['adv-forms', 'booking', 'crm', 'ecom', 'ai', 'bespoke'],
+          text: 'The estimate for {features} allows for a full custom build. Off-the-shelf tools can often cover this for much less, and we’d happily talk through whether that suits you.',
+        },
       },
     },
     /* Optional extra line in "Your website" for people who chose "Improvements to an existing website"
@@ -597,8 +603,26 @@
       ['brand', B.brand.h, B.brand.p],
       ['content', B.content.h, B.content[sel.content_state] || B.content.some],
       ['assets', B.assets.h, B.assets.p],
-      ['func', B.func.h, (sel.features || []).length ? B.func.picked : B.func.none],
+      ['func', B.func.h, funcParas()],
     ];
+  }
+  /* Functionality paragraphs: the picked or none route, plus the off-the-shelf note when any
+     feature that has an off-the-shelf alternative is chosen. */
+  function funcParas() {
+    var B = P.blocks.func,
+      picked = sel.features || [];
+    if (!picked.length) return B.none;
+    var ots = B.offTheShelf,
+      hit = ots
+        ? picked.filter(function (id) {
+            return ots.ids.indexOf(id) > -1;
+          })
+        : [];
+    if (!hit.length) return B.picked;
+    var names = hit.map(function (id) {
+      return P.summary.features[id] || optData('features', id).label.toLowerCase();
+    });
+    return B.picked.concat(ots.text.replace('{features}', listJoin(names)));
   }
   /* v = 'result' (See assessment) or 'book' (Book a consultation). Both fill the
      result panel, so switching between them later needs no recompute. */
