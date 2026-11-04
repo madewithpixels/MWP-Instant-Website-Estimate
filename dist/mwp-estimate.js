@@ -1,8 +1,8 @@
-/*! MWP Instant Website Estimate v3.0.0 | madewithpixels.co.uk | github.com/madewithpixels/MWP-Instant-Website-Estimate */
+/*! MWP Instant Website Estimate v3.0.1 | madewithpixels.co.uk | github.com/madewithpixels/MWP-Instant-Website-Estimate */
 (function () {
   'use strict';
   if (window.__MWP_ESTIMATE_LOADED__) return;
-  window.__MWP_ESTIMATE_LOADED__ = '3.0.0';
+  window.__MWP_ESTIMATE_LOADED__ = '3.0.1';
   function run() {
 /* ---- prefs.js ---- */
 /* MWP Assessment — default SETTINGS.
