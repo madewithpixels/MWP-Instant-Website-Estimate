@@ -39,13 +39,18 @@
      #mwp-adv's scroll-margin-top). Media query is MWP_PREFS.scrollOnNext. */
   var P = window.MWP_PREFS || {};
   var MQ = P.scrollOnNext || '(max-width: 991px), (max-height: 800px)';
-  var target = root.querySelector('[data-mwp="progress-wrap"]') || root;
+  var progWrap = root.querySelector('[data-mwp="progress-wrap"]') || root;
+  var qcolEl = root.querySelector('[data-mwp="q-col"]');
+  /* At 991px and below the progress bar moves into the bottom bar (bar.css)
+     once started, so scroll to the question panel instead */
+  var target = progWrap;
+  function aim() { target = progWrap.offsetParent !== null || !qcolEl ? progWrap : qcolEl; }
   var activeKey = function () {
     var st = root.querySelector('[data-stage][data-active="true"]');
     return st ? st.getAttribute('data-stage') : 'result';
   };
   var before = null;
-  main.addEventListener('click', function () { before = activeKey(); }, true);
+  main.addEventListener('click', function () { before = activeKey(); aim(); }, true);
   main.addEventListener('click', function () {
     var moved = before !== null && activeKey() !== before;
     before = null;

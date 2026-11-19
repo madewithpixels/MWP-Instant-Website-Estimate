@@ -36,11 +36,15 @@ Webflow class names (`IWA Panel`, `IWA Option`, `mwp-dock-tiles` and so on) are 
 | `data-mwp="stage-label"` | Text is set to "Step n of 6 — …". Shows `startLabel` ("Get started") until the visitor starts. |
 | `data-mwp="progress-wrap"` | Wrapper around the stage label and progress. Before starting it's the fixed "Get started" button (its Webflow class, `IWA Progress Wrapper`, positions it). Starting adds `.mwp-started` to `#mwp-adv`, which puts it back in the flow at the top of the widget and scrolls the widget into view. |
 
-## Live graph (graph column / mobile dock)
+## Tablet and mobile bar (991px and below)
+
+`bar.js` builds `data-mwp="bar"` itself and appends it to `#mwp-adv`; there is nothing to add in Webflow. It needs `next`, `est-figure` and the `pstep` elements, and uses `cta-see` / `cta-book` when present. Once started, at 991px and below, `bar.css` hides `next`, every `next-top`, `progress-wrap` and `sum-cta`, and the bar's button does their jobs. Generated hooks: `bar-est` (opens the breakdown sheet), `bar-est-figure`, `bar-step-text`, `bar-pips` / `bar-pip`, `bar-next`.
+
+## Live graph (graph column / breakdown sheet)
 
 | Attribute | Purpose |
 | --- | --- |
-| `data-mwp="graph-col"` | Graph column. Becomes the fixed dock under 768px. Gets `.is-open`. |
+| `data-mwp="graph-col"` | Graph column. Closed by default at 991px and below; opens as a sheet above the bar. Gets `.is-open`. |
 | `data-mwp="graph-h"`, `data-mwp="graph-sub"` | Heading and sub. Copy changes on the result screen. |
 | `data-mwp="bars"` | Bar rows wrapper. Hidden in the collapsed mobile dock. |
 | `data-fill="<cat>"` | Bar fill. Width is set as a % of the category's scale. |

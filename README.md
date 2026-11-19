@@ -13,8 +13,8 @@ Webflow page (structure, classes, copy)  ──►  data-* attributes  ◄──
 Put this in **Page settings → Custom code → Before `</body>`**:
 
 ```html
-<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/madewithpixels/mwp-instant-website-estimate@3.1.0/dist/mwp-estimate.min.css" />
-<script src="https://cdn.jsdelivr.net/gh/madewithpixels/mwp-instant-website-estimate@3.1.0/dist/mwp-estimate.min.js"></script>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/madewithpixels/mwp-instant-website-estimate@3.2.0/dist/mwp-estimate.min.css" />
+<script src="https://cdn.jsdelivr.net/gh/madewithpixels/mwp-instant-website-estimate@3.2.0/dist/mwp-estimate.min.js"></script>
 ```
 
 The page needs a `<section id="mwp-adv">` built to the [markup contract](docs/markup-contract.md). To override settings such as the booking URL or the start figure without a new release, see [configuration](docs/configuration.md).
@@ -29,7 +29,8 @@ src/js/
   engine.js        Stages, answers, pricing, live graph, result panel, hidden form sync.
   rating.js        Star rating widgets.
   tips.js          "How to keep cost and time down" tips on the result screen.
-  dock.js          Mobile estimate dock (collapse/expand, compact tiles, hide on result).
+  dock.js          Estimate breakdown sheet behaviour at 991px and below (open/close, compact tiles).
+  bar.js           Tablet/mobile sticky bottom bar: estimated investment, step 1–6 marker, Next.
   start.js         "Get started" launcher: fixed progress bar that drops into place on start.
   next-top.js      Extra Next button beside each question; disabled state for both Next buttons.
 src/css/
@@ -37,6 +38,7 @@ src/css/
   dock.css         Mobile dock rules that depend on JS-toggled parent classes.
   start.css        Launcher states (before/after .mwp-started).
   next-top.css     Top Next button: no-wrap and disabled state.
+  bar.css          Tablet/mobile bottom bar layout (991px and below).
 dist/              Built files served by jsDelivr (committed on purpose).
 test/              jsdom smoke test against a minimal copy of the markup.
 webflow/           Paste-ready snippets for Webflow custom code.

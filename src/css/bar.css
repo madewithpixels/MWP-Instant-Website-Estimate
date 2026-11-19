@@ -1,0 +1,96 @@
+/* MWP Estimate — tablet and mobile sticky bottom bar (991px and below).
+ * bar.js builds [data-mwp="bar"]: estimated investment | step n of 6 | Next.
+ * The button carries IWA Btn classes (styled in Webflow); the rest is
+ * functional layout, so it lives here. Colours fall back to the panel tones.
+ */
+#mwp-adv [data-mwp='bar'] { display: none; }
+
+@media screen and (max-width: 991px) {
+  /* The bar replaces what it summarises */
+  #mwp-adv.mwp-started [data-mwp='bar'] {
+    position: fixed;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    z-index: 502;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 12px 16px calc(12px + env(safe-area-inset-bottom, 0px));
+    box-sizing: border-box;
+    background-color: var(--mwp-bar-bg, #2b464e);
+    box-shadow: 0 -8px 24px rgba(0, 0, 0, 0.25);
+  }
+
+  #mwp-adv [data-mwp='bar-est'] {
+    all: unset;
+    box-sizing: border-box;
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+    min-width: 0;
+    cursor: pointer;
+    -webkit-tap-highlight-color: transparent;
+  }
+  #mwp-adv [data-mwp='bar-est']:focus-visible { outline: 2px solid currentColor; outline-offset: 4px; }
+  #mwp-adv [data-mwp='bar-est-label'] { font-size: 0.6875rem; line-height: 1.2; opacity: 0.7; white-space: nowrap; }
+  #mwp-adv [data-mwp='bar-est-figure'] { font-size: 1.25rem; line-height: 1.15; font-weight: 700; white-space: nowrap; }
+  #mwp-adv [data-mwp='bar-est-figure']::after {
+    content: '';
+    display: inline-block;
+    width: 6px;
+    height: 6px;
+    margin-left: 8px;
+    border-right: 2px solid currentColor;
+    border-top: 2px solid currentColor;
+    transform: translateY(-2px) rotate(-45deg);
+    opacity: 0.6;
+    transition: transform 0.2s ease;
+  }
+  #mwp-adv [data-mwp='bar-est'][aria-expanded='true'] [data-mwp='bar-est-figure']::after {
+    transform: translateY(1px) rotate(135deg);
+  }
+
+  /* Step marker: a six-segment strip along the top edge of the bar, so it
+     costs no width. The "Step n of 6" text sits beside the figure when there
+     is room for it. */
+  #mwp-adv [data-mwp='bar-steps'] { display: contents; }
+  #mwp-adv [data-mwp='bar-step-text'] { margin-left: auto; font-size: 0.6875rem; line-height: 1.2; opacity: 0.7; white-space: nowrap; }
+  @media screen and (max-width: 440px) { #mwp-adv [data-mwp='bar-step-text'] { display: none; } }
+  #mwp-adv [data-mwp='bar-pips'] {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    display: flex;
+    gap: 2px;
+  }
+  #mwp-adv [data-mwp='bar-pip'] { display: block; flex: 1 1 0; height: 3px; background-color: rgba(255, 255, 255, 0.18); }
+  #mwp-adv [data-mwp='bar-pip'].is-done { background-color: rgba(255, 255, 255, 0.85); }
+  #mwp-adv [data-mwp='bar-pip'].is-current { background-color: var(--raspberry, #d94f70); }
+
+  #mwp-adv [data-mwp='bar-next'] { flex-shrink: 0; white-space: nowrap; text-align: center; }
+  #mwp-adv [data-mwp='bar-next'][aria-disabled='true'] { opacity: 0.45; cursor: not-allowed; }
+
+  /* Assessment and booking screens: only the remaining button */
+  #mwp-adv.mwp-result-active [data-mwp='bar-est'],
+  #mwp-adv.mwp-result-active [data-mwp='bar-steps'],
+  #mwp-adv.mwp-book-active [data-mwp='bar-est'],
+  #mwp-adv.mwp-book-active [data-mwp='bar-steps'] { display: none; }
+  #mwp-adv.mwp-result-active [data-mwp='bar-next'],
+  #mwp-adv.mwp-book-active [data-mwp='bar-next'] { flex: 1 1 auto; }
+
+  /* Where the bar's pieces used to be */
+  #mwp-adv.mwp-started [data-mwp='next'],
+  #mwp-adv.mwp-started [data-mwp='next-top'],
+  #mwp-adv.mwp-started [data-mwp='progress-wrap'],
+  #mwp-adv [data-mwp='sum-cta'] { display: none !important; }
+  /* Back stays in the flow; with Next gone it sits alone on the left */
+  #mwp-adv [data-mwp='nav'] { justify-content: flex-start; }
+
+  /* Clearance so the question panel ends above the bar */
+  #mwp-adv [data-mwp='q-col'],
+  #mwp-adv.mwp-cta-active [data-mwp='q-col'],
+  #mwp-adv.mwp-result-active [data-mwp='q-col'],
+  #mwp-adv.mwp-book-active [data-mwp='q-col'] { margin-bottom: 96px; }
+}

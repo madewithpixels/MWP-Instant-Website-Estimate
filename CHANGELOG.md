@@ -1,5 +1,18 @@
 # Changelog
 
+## v3.2.0 — 19 November 2026
+
+### Added — tablet and mobile sticky bar (991px and below)
+- **One bar at the bottom of the screen** (`bar.js`, `bar.css`) holding the **estimated investment**, the **step marker (1–6)** and **Next**. It appears once the visitor has started, and is fixed to the bottom with the iOS safe-area inset. The step marker is a six-segment strip along the bar's top edge (done, current, to come), with "Step n of 6" beside the figure from 441px up.
+- It is built by script and mirrors the real elements, so the engine is untouched: the figure copies `est-figure`, the strip copies the `pstep` states, and the button clicks the real Next (same disabled state, same scroll on Next). On the last stage the button becomes **See assessment**, then **Book a free chat** on the assessment screen and **See assessment** on the booking screen. Only that button shows on those two screens.
+- Tapping the figure opens the breakdown as a **sheet resting on the bar** (bars, total, scope caveat) and closes it again.
+- No new Webflow class or element needed. The button uses `IWA Btn` + `IWA Btn Primary`, so it matches the other buttons.
+
+### Changed
+- At 991px and below, once started, the original Next buttons (`next`, every `next-top`), the top progress bar (`progress-wrap`) and the summary buttons (`sum-cta`) are hidden, because the bar replaces them. Back stays in the flow. Desktop is unchanged.
+- The estimate column (`graph-col`) is now closed by default up to 991px (was: fixed dock under 768px, a stacked panel from 768 to 991px) and opens as the sheet. `dock.js` breakpoint 767px → 991px; `dock.css` rewritten for the sheet.
+- Scroll-on-Next aims at the question panel when the progress bar is hidden (`next-top.js`).
+
 ## v3.1.0 — 4 November 2026
 
 No markup change. "Your functionality" gains a second paragraph when the visitor picks any of advanced forms, a booking system, CRM or email integration, ecommerce, AI or bespoke functionality: the estimate allows for a full custom build, and off-the-shelf tools can often cover it for much less. It names the features they picked. Features built into Webflow (blog, portfolio, services, downloads, events, testimonials, team) and the social media campaign don't trigger it. Copy and the feature list are `blocks.func.offTheShelf` in prefs.

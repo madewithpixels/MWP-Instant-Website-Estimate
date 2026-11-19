@@ -155,4 +155,37 @@ assert.equal(R.querySelectorAll('[data-mwp="tip"]').length, 4, 'tips still there
   assert.ok(fb.includes('firm ideas'), 'blog only: picked route');
   assert.ok(!fb.includes('off-the-shelf') && !fb.includes('Off-the-shelf'), 'blog only: no off-the-shelf note');
 }
+
+// Tablet/mobile sticky bar (bar.js): a mirror of figure, step and Next
+{
+  const { window: w2 } = new JSDOM(`<!doctype html><body>${readFileSync('test/fixture.html', 'utf8')}</body>`, { runScripts: 'outside-only' });
+  w2.matchMedia = () => ({ matches: false });
+  w2.HTMLElement.prototype.scrollIntoView = function () {};
+  w2.scrollTo = function () {};
+  w2.eval(readFileSync(process.argv[2] || 'dist/mwp-estimate.js', 'utf8'));
+  if (w2.document.readyState === 'loading') await new Promise((r) => w2.document.addEventListener('DOMContentLoaded', r));
+  const R4 = w2.document.getElementById('mwp-adv');
+  const q4 = (s) => R4.querySelector(s);
+  const t4 = () => new Promise((r) => setTimeout(r, 0));
+  assert.ok(q4('[data-mwp="bar"]'), 'bar is built');
+  assert.equal(R4.querySelectorAll('[data-mwp="bar-pip"]').length, 6, 'six pips');
+  q4('[data-mwp="progress-wrap"]').click();
+  await t4();
+  assert.equal(q4('[data-mwp="bar-step-text"]').textContent, 'Step 1 of 6', 'bar shows the step');
+  assert.equal(q4('[data-mwp="bar-next"]').getAttribute('aria-disabled'), 'true', 'bar Next disabled until answered');
+  q4('[data-stage="project_type"] [data-answer-id="new-site"]').click();
+  await t4();
+  assert.equal(q4('[data-mwp="bar-est-figure"]').textContent, '£500', 'bar mirrors the running figure');
+  assert.equal(q4('[data-mwp="bar-next"]').getAttribute('aria-disabled'), 'false', 'bar Next enabled once answered');
+  q4('[data-mwp="bar-next"]').click();
+  await t4();
+  assert.equal(q4('[data-stage="website_size"]').getAttribute('data-active'), 'true', 'bar Next advances');
+  assert.equal(q4('[data-mwp="bar-step-text"]').textContent, 'Step 2 of 6', 'bar step follows');
+  assert.equal(q4('[data-mwp="bar-pips"]').getAttribute('aria-valuenow'), '2', 'progressbar value follows');
+  assert.ok(q4('[data-mwp="bar-pip"]').classList.contains('is-done'), 'first pip done');
+  q4('[data-mwp="bar-est"]').click();
+  assert.ok(q4('[data-mwp="graph-col"]').classList.contains('is-open'), 'figure opens the breakdown sheet');
+  q4('[data-mwp="bar-est"]').click();
+  assert.ok(!q4('[data-mwp="graph-col"]').classList.contains('is-open'), 'figure closes it again');
+}
 console.log('smoke: all checks passed');

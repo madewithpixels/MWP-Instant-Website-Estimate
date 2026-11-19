@@ -1,4 +1,4 @@
-/*! MWP Instant Website Estimate v3.1.0 | madewithpixels.co.uk | github.com/madewithpixels/MWP-Instant-Website-Estimate */
+/*! MWP Instant Website Estimate v3.2.0 | madewithpixels.co.uk | github.com/madewithpixels/MWP-Instant-Website-Estimate */
 /* MWP Estimate — functional CSS.
  * Stage/result visibility is engine-driven (inline display), so every stage
  * and the result panel stay visible in the Webflow Designer canvas.
@@ -107,68 +107,53 @@
 /* Result screen: the Website block. Webflow styles the other four (is-brand, is-content, is-assets, is-complex). */
 #mwp-adv .mwp-reco.is-website { border-left: 5px solid var(--teal); }
 
-/* MWP Estimate — mobile estimate dock (below 768px).
+/* MWP Estimate — estimate breakdown sheet (991px and below).
  *
- * Everything the Style panel can express lives on Webflow CLASSES and is
- * editable at the Mobile breakpoint:
- *   - dock shell geometry ....... "MWP Graph Col" (combo on "IWA Panel")
- *   - total row / tap target .... "IWA Est"
- *   - tiles strip ............... "mwp-dock-tiles" (currently display:none at Mobile)
- *   - individual tile ........... "mwp-dock-tile"
- *   - tile price text ........... "mwp-dock-val"
- *   - Breakdown toggle .......... "mwp-dock-toggle"
- *   - toggle chevron ............ "mwp-dock-chev"
- *   - Back / Next row ........... "IWA Nav" (no translate at Mobile)
- *   - heading + sub hidden ...... "MWP Graph Heading" / "MWP Graph Sub"
+ * On tablet and mobile the estimate column is no longer shown in the flow.
+ * bar.js builds a sticky bottom bar (bar.css) with the estimated investment,
+ * the step marker and Next. Tapping the figure opens this column as a sheet
+ * just above the bar: the bars, the total and the scope caveat.
  *
- * Only the rules below live here, because they depend on the .is-open class
- * dock.js toggles and the .mwp-cta-active / .mwp-result-active /
- * .mwp-book-active classes the engine sets — Webflow has no UI for
- * parent-state selectors.
+ * Webflow classes still style the contents (editable in the Designer):
+ *   - sheet look ................ "MWP Graph Col" (combo on "IWA Panel")
+ *   - total row ................. "IWA Est"
+ *   - heading + sub ............. "MWP Graph Heading" / "MWP Graph Sub"
+ * Only what depends on .is-open (set by bar.js / dock.js) or on the
+ * .mwp-result-active / .mwp-book-active classes the engine sets lives here,
+ * because Webflow has no UI for parent-state selectors.
  */
-@media screen and (max-width: 767px) {
-  /* Scrolls if expanded content exceeds the max-height set on the class */
-  #mwp-adv [data-mwp='graph-col'] { overflow-y: auto; }
+@media screen and (max-width: 991px) {
+  /* Closed by default; the bar carries the figure */
+  #mwp-adv [data-mwp='graph-col'] { display: none; }
 
-  /* Clearance so the question panel (and Back / Next) ends above the collapsed dock */
-  #mwp-adv [data-mwp='q-col'] { margin-bottom: 110px; }
-
-  /* Collapsed by default — bars and the scope caveat hidden to keep the dock shallow */
-  #mwp-adv [data-mwp='bars'] { display: none; }
-  #mwp-adv [data-mwp='est-caveat'] { display: none; }
-
-  /* Collapsed — no dotted divider above the total (IWA Est border-top); it only
-     separates the bars from the total when the dock is expanded */
-  #mwp-adv [data-mwp='graph-col']:not(.is-open) [data-mwp='est'] { border-top-style: none; }
-
-  /* Expanded — bars and caveat return, tiles stay hidden */
+  /* Open: a sheet resting on the bar */
+  #mwp-adv.mwp-started [data-mwp='graph-col'].is-open {
+    display: block;
+    position: fixed;
+    top: auto;
+    left: 0;
+    right: 0;
+    bottom: calc(var(--mwp-bar-h, 72px) + env(safe-area-inset-bottom, 0px));
+    z-index: 501;
+    box-sizing: border-box;
+    width: auto;
+    max-width: none;
+    max-height: min(70vh, 560px);
+    margin: 0;
+    padding: 16px 16px 8px;
+    overflow-y: auto;
+    border-radius: 16px 16px 0 0;
+    transform: none;
+  }
   #mwp-adv [data-mwp='graph-col'].is-open [data-mwp='bars'] { display: block; }
   #mwp-adv [data-mwp='graph-col'].is-open [data-mwp='est-caveat'] { display: block; }
   #mwp-adv [data-mwp='graph-col'].is-open [data-mwp='dock-tiles'] { display: none; }
+  #mwp-adv [data-mwp='graph-col'].is-open [data-mwp='est'] { padding-right: 0; }
+  #mwp-adv [data-mwp='graph-col'] [data-mwp='dock-toggle'] { display: none; }
 
-  /* Last stage: the dock also carries the "Book a consultation" / "See assessment"
-     buttons ([data-mwp='sum-cta']), so the question panel needs more clearance */
-  #mwp-adv.mwp-cta-active [data-mwp='q-col'] { margin-bottom: 180px; }
-
-  /* Assessment and booking screens: the left panel already shows the figures,
-     so the dock shrinks to just the remaining button */
-  #mwp-adv.mwp-result-active [data-mwp='est'],
-  #mwp-adv.mwp-result-active [data-mwp='bars'],
-  #mwp-adv.mwp-result-active [data-mwp='dock-tiles'],
-  #mwp-adv.mwp-book-active [data-mwp='est'],
-  #mwp-adv.mwp-book-active [data-mwp='bars'],
-  #mwp-adv.mwp-book-active [data-mwp='dock-tiles'] { display: none; }
-  #mwp-adv.mwp-result-active [data-mwp='q-col'],
-  #mwp-adv.mwp-book-active [data-mwp='q-col'] { margin-bottom: 90px; }
-
-  /* Buttons share the dock width equally. The row itself is styled on the
-     "IWA Sum CTA" class; the buttons carry the shared IWA Btn classes, so
-     this dock-only sizing can't live on a class. */
-  #mwp-adv [data-mwp='sum-cta'] > * {
-    flex: 1 1 0;
-    padding-left: 10px;
-    padding-right: 10px;
-  }
+  /* Assessment and booking screens show the figures in the left panel */
+  #mwp-adv.mwp-result-active [data-mwp='graph-col'],
+  #mwp-adv.mwp-book-active [data-mwp='graph-col'] { display: none !important; }
 }
 
 /* MWP Estimate — "Get started" launcher states.
@@ -247,4 +232,101 @@
 #mwp-adv [data-mwp='next'][aria-disabled='true'] {
   opacity: 0.45;
   cursor: not-allowed;
+}
+
+/* MWP Estimate — tablet and mobile sticky bottom bar (991px and below).
+ * bar.js builds [data-mwp="bar"]: estimated investment | step n of 6 | Next.
+ * The button carries IWA Btn classes (styled in Webflow); the rest is
+ * functional layout, so it lives here. Colours fall back to the panel tones.
+ */
+#mwp-adv [data-mwp='bar'] { display: none; }
+
+@media screen and (max-width: 991px) {
+  /* The bar replaces what it summarises */
+  #mwp-adv.mwp-started [data-mwp='bar'] {
+    position: fixed;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    z-index: 502;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 12px 16px calc(12px + env(safe-area-inset-bottom, 0px));
+    box-sizing: border-box;
+    background-color: var(--mwp-bar-bg, #2b464e);
+    box-shadow: 0 -8px 24px rgba(0, 0, 0, 0.25);
+  }
+
+  #mwp-adv [data-mwp='bar-est'] {
+    all: unset;
+    box-sizing: border-box;
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+    min-width: 0;
+    cursor: pointer;
+    -webkit-tap-highlight-color: transparent;
+  }
+  #mwp-adv [data-mwp='bar-est']:focus-visible { outline: 2px solid currentColor; outline-offset: 4px; }
+  #mwp-adv [data-mwp='bar-est-label'] { font-size: 0.6875rem; line-height: 1.2; opacity: 0.7; white-space: nowrap; }
+  #mwp-adv [data-mwp='bar-est-figure'] { font-size: 1.25rem; line-height: 1.15; font-weight: 700; white-space: nowrap; }
+  #mwp-adv [data-mwp='bar-est-figure']::after {
+    content: '';
+    display: inline-block;
+    width: 6px;
+    height: 6px;
+    margin-left: 8px;
+    border-right: 2px solid currentColor;
+    border-top: 2px solid currentColor;
+    transform: translateY(-2px) rotate(-45deg);
+    opacity: 0.6;
+    transition: transform 0.2s ease;
+  }
+  #mwp-adv [data-mwp='bar-est'][aria-expanded='true'] [data-mwp='bar-est-figure']::after {
+    transform: translateY(1px) rotate(135deg);
+  }
+
+  /* Step marker: a six-segment strip along the top edge of the bar, so it
+     costs no width. The "Step n of 6" text sits beside the figure when there
+     is room for it. */
+  #mwp-adv [data-mwp='bar-steps'] { display: contents; }
+  #mwp-adv [data-mwp='bar-step-text'] { margin-left: auto; font-size: 0.6875rem; line-height: 1.2; opacity: 0.7; white-space: nowrap; }
+  @media screen and (max-width: 440px) { #mwp-adv [data-mwp='bar-step-text'] { display: none; } }
+  #mwp-adv [data-mwp='bar-pips'] {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    display: flex;
+    gap: 2px;
+  }
+  #mwp-adv [data-mwp='bar-pip'] { display: block; flex: 1 1 0; height: 3px; background-color: rgba(255, 255, 255, 0.18); }
+  #mwp-adv [data-mwp='bar-pip'].is-done { background-color: rgba(255, 255, 255, 0.85); }
+  #mwp-adv [data-mwp='bar-pip'].is-current { background-color: var(--raspberry, #d94f70); }
+
+  #mwp-adv [data-mwp='bar-next'] { flex-shrink: 0; white-space: nowrap; text-align: center; }
+  #mwp-adv [data-mwp='bar-next'][aria-disabled='true'] { opacity: 0.45; cursor: not-allowed; }
+
+  /* Assessment and booking screens: only the remaining button */
+  #mwp-adv.mwp-result-active [data-mwp='bar-est'],
+  #mwp-adv.mwp-result-active [data-mwp='bar-steps'],
+  #mwp-adv.mwp-book-active [data-mwp='bar-est'],
+  #mwp-adv.mwp-book-active [data-mwp='bar-steps'] { display: none; }
+  #mwp-adv.mwp-result-active [data-mwp='bar-next'],
+  #mwp-adv.mwp-book-active [data-mwp='bar-next'] { flex: 1 1 auto; }
+
+  /* Where the bar's pieces used to be */
+  #mwp-adv.mwp-started [data-mwp='next'],
+  #mwp-adv.mwp-started [data-mwp='next-top'],
+  #mwp-adv.mwp-started [data-mwp='progress-wrap'],
+  #mwp-adv [data-mwp='sum-cta'] { display: none !important; }
+  /* Back stays in the flow; with Next gone it sits alone on the left */
+  #mwp-adv [data-mwp='nav'] { justify-content: flex-start; }
+
+  /* Clearance so the question panel ends above the bar */
+  #mwp-adv [data-mwp='q-col'],
+  #mwp-adv.mwp-cta-active [data-mwp='q-col'],
+  #mwp-adv.mwp-result-active [data-mwp='q-col'],
+  #mwp-adv.mwp-book-active [data-mwp='q-col'] { margin-bottom: 96px; }
 }

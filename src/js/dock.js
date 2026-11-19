@@ -1,6 +1,7 @@
-/* MWP Assessment — mobile estimate dock behaviour.
- * Below 768px the graph column becomes a fixed dock. Tapping the total
- * ([data-mwp="est"]) toggles .is-open (bars shown). Also mirrors category
+/* MWP Assessment — estimate breakdown sheet behaviour.
+ * At 991px and below the graph column is a sheet above the bottom bar (bar.js).
+ * Tapping the total ([data-mwp="est"]) inside the open sheet closes it; the
+ * bar's figure opens it. Both toggle .is-open (bars shown). Also mirrors category
  * values into the compact [data-short] tiles. The engine flags #mwp-adv with
  * .mwp-cta-active / .mwp-result-active / .mwp-book-active; dock.css uses them.
  */
@@ -14,7 +15,7 @@
   var hint = root.querySelector('[data-mwp="dock-hint"]');
   var chev = root.querySelector('[data-mwp="dock-chev"]');
   var isMobile = function () {
-    return window.matchMedia('(max-width: 767px)').matches;
+    return window.matchMedia('(max-width: 991px)').matches;
   };
 
   function setOpen(open) {
