@@ -38,7 +38,7 @@ Webflow class names (`IWA Panel`, `IWA Option`, `mwp-dock-tiles` and so on) are 
 
 ## Tablet and mobile bar (991px and below)
 
-`bar.js` builds `data-mwp="bar"` itself and appends it to `#mwp-adv`; there is nothing to add in Webflow. It needs `next`, `est-figure` and the `pstep` elements, and uses `cta-see` / `cta-book` when present. Once started, at 991px and below, `bar.css` hides `next`, every `next-top`, `progress-wrap` and `sum-cta`, and the bar's button does their jobs. Generated hooks: `bar-est` (opens the breakdown sheet), `bar-est-figure`, `bar-step-text`, `bar-pips` / `bar-pip`, `bar-next`.
+`bar.js` builds `data-mwp="bar"` itself and appends it to `#mwp-adv`; there is nothing to add in Webflow. It needs `next`, `back`, `est-figure` and the `pstep` elements, and uses `cta-see` / `cta-book` when present. Once started, at 991px and below, `bar.css` hides `nav` (Back/Next), every `next-top`, `progress-wrap` and `sum-cta`, and the bar's buttons do their jobs. Generated hooks: `bar-back`, `bar-est` (opens the breakdown sheet), `bar-est-figure`, `bar-pips` / `bar-pip`, `bar-next`. It also needs `back` for the arrow.
 
 ## Live graph (graph column / breakdown sheet)
 

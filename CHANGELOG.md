@@ -1,5 +1,11 @@
 # Changelog
 
+## v3.2.1 — 19 November 2026
+
+### Changed — tablet and mobile bar layout (991px and below)
+- **Back arrow on the left, estimated investment in the middle, Next on the right.** Back is a square arrow-only button (`IWA Btn` + `IWA Btn Ghost`) that clicks the real Back and is dimmed on the first stage. Next is pinned to the right edge. The figure is centred between them. The step marker stays as the six-segment strip along the top edge; the "Step n of 6" text is gone (it is on the strip's accessible value instead).
+- The in-flow Back/Next row (`nav`) is hidden at 991px and below once started, because the bar now holds Back too. On the assessment and booking screens the bar is still just the one button.
+
 ## v3.2.0 — 19 November 2026
 
 ### Added — tablet and mobile sticky bar (991px and below)

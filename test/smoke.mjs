@@ -171,7 +171,8 @@ assert.equal(R.querySelectorAll('[data-mwp="tip"]').length, 4, 'tips still there
   assert.equal(R4.querySelectorAll('[data-mwp="bar-pip"]').length, 6, 'six pips');
   q4('[data-mwp="progress-wrap"]').click();
   await t4();
-  assert.equal(q4('[data-mwp="bar-step-text"]').textContent, 'Step 1 of 6', 'bar shows the step');
+  assert.equal(q4('[data-mwp="bar-pips"]').getAttribute('aria-valuetext'), 'Step 1 of 6', 'bar shows the step');
+  assert.equal(q4('[data-mwp="bar-back"]').getAttribute('aria-disabled'), 'true', 'bar Back disabled on the first stage');
   assert.equal(q4('[data-mwp="bar-next"]').getAttribute('aria-disabled'), 'true', 'bar Next disabled until answered');
   q4('[data-stage="project_type"] [data-answer-id="new-site"]').click();
   await t4();
@@ -180,7 +181,15 @@ assert.equal(R.querySelectorAll('[data-mwp="tip"]').length, 4, 'tips still there
   q4('[data-mwp="bar-next"]').click();
   await t4();
   assert.equal(q4('[data-stage="website_size"]').getAttribute('data-active'), 'true', 'bar Next advances');
-  assert.equal(q4('[data-mwp="bar-step-text"]').textContent, 'Step 2 of 6', 'bar step follows');
+  assert.equal(q4('[data-mwp="bar-pips"]').getAttribute('aria-valuetext'), 'Step 2 of 6', 'bar step follows');
+  assert.equal(q4('[data-mwp="bar-back"]').getAttribute('aria-disabled'), 'false', 'bar Back enabled after the first stage');
+  q4('[data-mwp="bar-back"]').click();
+  await t4();
+  assert.equal(q4('[data-stage="project_type"]').getAttribute('data-active'), 'true', 'bar Back goes back');
+  q4('[data-stage="project_type"] [data-answer-id="new-site"]').click(); // going back clears the answer (clearOnBack)
+  await t4();
+  q4('[data-mwp="bar-next"]').click();
+  await t4();
   assert.equal(q4('[data-mwp="bar-pips"]').getAttribute('aria-valuenow'), '2', 'progressbar value follows');
   assert.ok(q4('[data-mwp="bar-pip"]').classList.contains('is-done'), 'first pip done');
   q4('[data-mwp="bar-est"]').click();

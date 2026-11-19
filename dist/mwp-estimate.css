@@ -1,4 +1,4 @@
-/*! MWP Instant Website Estimate v3.2.0 | madewithpixels.co.uk | github.com/madewithpixels/MWP-Instant-Website-Estimate */
+/*! MWP Instant Website Estimate v3.2.1 | madewithpixels.co.uk | github.com/madewithpixels/MWP-Instant-Website-Estimate */
 /* MWP Estimate — functional CSS.
  * Stage/result visibility is engine-driven (inline display), so every stage
  * and the result panel stay visible in the Webflow Designer canvas.
@@ -235,7 +235,8 @@
 }
 
 /* MWP Estimate — tablet and mobile sticky bottom bar (991px and below).
- * bar.js builds [data-mwp="bar"]: estimated investment | step n of 6 | Next.
+ * bar.js builds [data-mwp="bar"]: Back arrow | estimated investment | Next,
+ * with the step 1–6 marker along the top edge.
  * The button carries IWA Btn classes (styled in Webflow); the rest is
  * functional layout, so it lives here. Colours fall back to the panel tones.
  */
@@ -249,7 +250,8 @@
     right: 0;
     bottom: 0;
     z-index: 502;
-    display: flex;
+    display: grid;
+    grid-template-columns: auto minmax(0, 1fr) auto;
     align-items: center;
     gap: 12px;
     padding: 12px 16px calc(12px + env(safe-area-inset-bottom, 0px));
@@ -263,6 +265,8 @@
     box-sizing: border-box;
     display: flex;
     flex-direction: column;
+    align-items: center;
+    text-align: center;
     gap: 2px;
     min-width: 0;
     cursor: pointer;
@@ -288,11 +292,7 @@
   }
 
   /* Step marker: a six-segment strip along the top edge of the bar, so it
-     costs no width. The "Step n of 6" text sits beside the figure when there
-     is room for it. */
-  #mwp-adv [data-mwp='bar-steps'] { display: contents; }
-  #mwp-adv [data-mwp='bar-step-text'] { margin-left: auto; font-size: 0.6875rem; line-height: 1.2; opacity: 0.7; white-space: nowrap; }
-  @media screen and (max-width: 440px) { #mwp-adv [data-mwp='bar-step-text'] { display: none; } }
+     costs no width. */
   #mwp-adv [data-mwp='bar-pips'] {
     position: absolute;
     top: 0;
@@ -305,24 +305,37 @@
   #mwp-adv [data-mwp='bar-pip'].is-done { background-color: rgba(255, 255, 255, 0.85); }
   #mwp-adv [data-mwp='bar-pip'].is-current { background-color: var(--raspberry, #d94f70); }
 
-  #mwp-adv [data-mwp='bar-next'] { flex-shrink: 0; white-space: nowrap; text-align: center; }
+  /* Back arrow: a square ghost button the same height as Next */
+  #mwp-adv [data-mwp='bar-back'] {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-sizing: border-box;
+    width: 48px;
+    min-width: 48px;
+    height: 48px;
+    padding: 0;
+  }
+  #mwp-adv [data-mwp='bar-back'][aria-disabled='true'] { opacity: 0.35; cursor: not-allowed; }
+  #mwp-adv [data-mwp='bar-next'] { box-sizing: border-box; min-height: 48px; white-space: nowrap; text-align: center; }
   #mwp-adv [data-mwp='bar-next'][aria-disabled='true'] { opacity: 0.45; cursor: not-allowed; }
 
   /* Assessment and booking screens: only the remaining button */
+  #mwp-adv.mwp-result-active [data-mwp='bar-back'],
   #mwp-adv.mwp-result-active [data-mwp='bar-est'],
-  #mwp-adv.mwp-result-active [data-mwp='bar-steps'],
+  #mwp-adv.mwp-result-active [data-mwp='bar-pips'],
+  #mwp-adv.mwp-book-active [data-mwp='bar-back'],
   #mwp-adv.mwp-book-active [data-mwp='bar-est'],
-  #mwp-adv.mwp-book-active [data-mwp='bar-steps'] { display: none; }
-  #mwp-adv.mwp-result-active [data-mwp='bar-next'],
-  #mwp-adv.mwp-book-active [data-mwp='bar-next'] { flex: 1 1 auto; }
+  #mwp-adv.mwp-book-active [data-mwp='bar-pips'] { display: none; }
+  #mwp-adv.mwp-result-active [data-mwp='bar'],
+  #mwp-adv.mwp-book-active [data-mwp='bar'] { grid-template-columns: 1fr; }
 
   /* Where the bar's pieces used to be */
+  #mwp-adv.mwp-started [data-mwp='nav'],
   #mwp-adv.mwp-started [data-mwp='next'],
   #mwp-adv.mwp-started [data-mwp='next-top'],
   #mwp-adv.mwp-started [data-mwp='progress-wrap'],
   #mwp-adv [data-mwp='sum-cta'] { display: none !important; }
-  /* Back stays in the flow; with Next gone it sits alone on the left */
-  #mwp-adv [data-mwp='nav'] { justify-content: flex-start; }
 
   /* Clearance so the question panel ends above the bar */
   #mwp-adv [data-mwp='q-col'],

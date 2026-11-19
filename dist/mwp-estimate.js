@@ -1,8 +1,8 @@
-/*! MWP Instant Website Estimate v3.2.0 | madewithpixels.co.uk | github.com/madewithpixels/MWP-Instant-Website-Estimate */
+/*! MWP Instant Website Estimate v3.2.1 | madewithpixels.co.uk | github.com/madewithpixels/MWP-Instant-Website-Estimate */
 (function () {
   'use strict';
   if (window.__MWP_ESTIMATE_LOADED__) return;
-  window.__MWP_ESTIMATE_LOADED__ = '3.2.0';
+  window.__MWP_ESTIMATE_LOADED__ = '3.2.1';
   function run() {
 /* ---- prefs.js ---- */
 /* MWP Assessment — default SETTINGS.
@@ -1238,7 +1238,8 @@
 /* ---- bar.js ---- */
 /* MWP Assessment — tablet and mobile sticky bottom bar (991px and below).
  * Builds one fixed bar from three things the visitor otherwise has to hunt for:
- *   [estimated investment]  [step n of 6 pips]  [Next]
+ *   [Back arrow]  [estimated investment]  [Next]
+ * with the step 1–6 marker as a segmented strip along the bar's top edge.
  * Everything in it is a mirror of the real elements, so the engine keeps full
  * control: the figure copies [data-mwp="est-figure"], the pips copy the
  * [data-mwp="pstep"] states, and the button clicks the real Next (or, from the
@@ -1252,6 +1253,7 @@
   var root = document.getElementById('mwp-adv');
   if (!root) return;
   var main = root.querySelector('[data-mwp="next"]');
+  var back = root.querySelector('[data-mwp="back"]');
   var fig = root.querySelector('[data-mwp="est-figure"]');
   var dock = root.querySelector('[data-mwp="graph-col"]');
   if (!main || !fig) return;
@@ -1265,21 +1267,21 @@
   bar.setAttribute('aria-label', 'Your estimate and progress');
   var pips = psteps.map(function () { return '<span data-mwp="bar-pip"></span>'; }).join('');
   bar.innerHTML =
+    '<a href="#" role="button" aria-label="Back" class="iwa-btn iwa-btn-ghost" data-mwp="bar-back">' +
+      '<svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M19 12H5M11 6l-6 6 6 6"/></svg>' +
+    '</a>' +
     '<button type="button" data-mwp="bar-est" aria-expanded="false">' +
       '<span data-mwp="bar-est-label">Estimated investment</span>' +
       '<span data-mwp="bar-est-figure"></span>' +
     '</button>' +
-    '<div data-mwp="bar-steps">' +
-      '<span data-mwp="bar-step-text"></span>' +
-      '<span data-mwp="bar-pips" role="progressbar" aria-valuemin="1" aria-valuemax="' + psteps.length + '" aria-label="Progress">' + pips + '</span>' +
-    '</div>' +
+    '<span data-mwp="bar-pips" role="progressbar" aria-valuemin="1" aria-valuemax="' + psteps.length + '" aria-label="Progress">' + pips + '</span>' +
     '<a href="#" role="button" class="iwa-btn iwa-btn-primary" data-mwp="bar-next">Next</a>';
   root.appendChild(bar);
 
   var q = function (s) { return bar.querySelector(s); };
   var barEst = q('[data-mwp="bar-est"]'),
     barFig = q('[data-mwp="bar-est-figure"]'),
-    barText = q('[data-mwp="bar-step-text"]'),
+    barBack = q('[data-mwp="bar-back"]'),
     barPips = [].slice.call(bar.querySelectorAll('[data-mwp="bar-pip"]')),
     barPipsEl = q('[data-mwp="bar-pips"]'),
     barNext = q('[data-mwp="bar-next"]');
@@ -1310,7 +1312,8 @@
       if (cur) n = i + 1;
     });
     setAttr(barPipsEl, 'aria-valuenow', String(Math.max(n, 1)));
-    setText(barText, n > 0 ? 'Step ' + n + ' of ' + psteps.length : '');
+    setAttr(barPipsEl, 'aria-valuetext', 'Step ' + Math.max(n, 1) + ' of ' + psteps.length);
+    setAttr(barBack, 'aria-disabled', back && !back.disabled && back.getAttribute('aria-disabled') !== 'true' ? 'false' : 'true');
     var t = target();
     setText(barNext, (t.textContent || '').replace(/\s+/g, ' ').trim() || 'Next');
     setAttr(barNext, 'aria-disabled', t.getAttribute('aria-disabled') === 'true' ? 'true' : 'false');
@@ -1322,6 +1325,10 @@
     if (barNext.getAttribute('aria-disabled') === 'true') return;
     target().click();
   });
+  barBack.addEventListener('click', function (e) {
+    e.preventDefault();
+    if (back && !back.disabled) back.click();
+  });
   barEst.addEventListener('click', function () {
     if (!dock) return;
     dock.classList.toggle('is-open');
@@ -1331,7 +1338,7 @@
   sync();
   if (window.MutationObserver) {
     var mo = new MutationObserver(sync);
-    mo.observe(root, { subtree: true, attributes: true, attributeFilter: ['class', 'style', 'aria-disabled'] });
+    mo.observe(root, { subtree: true, attributes: true, attributeFilter: ['class', 'style', 'aria-disabled', 'disabled'] });
     mo.observe(fig, { childList: true, characterData: true, subtree: true });
     [see, book].forEach(function (b) { if (b) mo.observe(b, { childList: true, characterData: true, subtree: true }); });
   }
